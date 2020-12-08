@@ -11,7 +11,8 @@ import SwiftUI
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    var window: NSWindow!
+    var popover: NSPopover!
+    var statusItem: NSStatusItem!
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -19,15 +20,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Add `@Environment(\.managedObjectContext)` in the views that will need the context.
         let contentView = ContentView().environment(\.managedObjectContext, persistentContainer.viewContext)
 
-        // Create the window and set the content view.
-        window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        window.center()
-        window.setFrameAutosaveName("Main Window")
-        window.contentView = NSHostingView(rootView: contentView)
-        window.makeKeyAndOrderFront(nil)
+        // Create the popover and set the content view.
+        popover = NSPopover()
+        popover.contentSize = NSSize(width: 400, height: 300)
+        popover.behavior = .transient
+        popover.contentViewController = NSHostingController(rootView: contentView)
+
+        // Create the status item
+        statusItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
+        if let button = statusItem.button {
+            button.image = NSImage(named: "Cupcake")?.resize(toSize: NSSize(width: 16, height: 16))
+            button.action = #selector(togglePopover(_:))
+       }
+    }
+
+    @objc func togglePopover(_ sender: AnyObject?) {
+        if let button = statusItem.button {
+            if popover.isShown {
+                popover.performClose(sender)
+            } else {
+                popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
+                popover.contentViewController?.view.window?.becomeKey()
+            }
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
