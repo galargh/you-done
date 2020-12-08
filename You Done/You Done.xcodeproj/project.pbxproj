@@ -16,6 +16,9 @@
 		68CBC6F4257E943F00709835 /* You_DoneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6F3257E943F00709835 /* You_DoneTests.swift */; };
 		68CBC6FF257E943F00709835 /* You_DoneUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6FE257E943F00709835 /* You_DoneUITests.swift */; };
 		68CBC710257F774600709835 /* NSImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC70F257F774600709835 /* NSImageExtension.swift */; };
+		68CBC72A257F88F800709835 /* IntegrationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC729257F88F800709835 /* IntegrationListView.swift */; };
+		68CBC732257F891B00709835 /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC731257F891B00709835 /* StatusView.swift */; };
+		68CBC747257F944C00709835 /* Integration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC746257F944C00709835 /* Integration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +55,9 @@
 		68CBC6FE257E943F00709835 /* You_DoneUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = You_DoneUITests.swift; sourceTree = "<group>"; };
 		68CBC700257E943F00709835 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		68CBC70F257F774600709835 /* NSImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSImageExtension.swift; sourceTree = "<group>"; };
+		68CBC729257F88F800709835 /* IntegrationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationListView.swift; sourceTree = "<group>"; };
+		68CBC731257F891B00709835 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
+		68CBC746257F944C00709835 /* Integration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Integration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +110,9 @@
 			children = (
 				68CBC6DA257E943C00709835 /* AppDelegate.swift */,
 				68CBC6DC257E943C00709835 /* ContentView.swift */,
+				68CBC729257F88F800709835 /* IntegrationListView.swift */,
+				68CBC746257F944C00709835 /* Integration.swift */,
+				68CBC731257F891B00709835 /* StatusView.swift */,
 				68CBC6E1257E943E00709835 /* Assets.xcassets */,
 				68CBC6E6257E943E00709835 /* Main.storyboard */,
 				68CBC6E9257E943E00709835 /* Info.plist */,
@@ -273,8 +282,11 @@
 			files = (
 				68CBC6E0257E943C00709835 /* You_Done.xcdatamodeld in Sources */,
 				68CBC6DD257E943C00709835 /* ContentView.swift in Sources */,
+				68CBC747257F944C00709835 /* Integration.swift in Sources */,
+				68CBC732257F891B00709835 /* StatusView.swift in Sources */,
 				68CBC710257F774600709835 /* NSImageExtension.swift in Sources */,
 				68CBC6DB257E943C00709835 /* AppDelegate.swift in Sources */,
+				68CBC72A257F88F800709835 /* IntegrationListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

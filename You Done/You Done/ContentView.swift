@@ -9,7 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Image("Cake").frame(maxWidth: .infinity, maxHeight: .infinity)
+        VStack {
+            Text("You done!")
+            TabView {
+                StatusView().tabItem {
+                    Text("Status")
+                }
+                IntegrationListView().tabItem {
+                    Text("Integrations")
+                }
+            }
+        }
     }
 }
 
