@@ -9,14 +9,16 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Text("You done!")
-            TabView {
-                StatusView().tabItem {
-                    Text("Status")
-                }
-                IntegrationListView().tabItem {
-                    Text("Integrations")
+        StackNavigationView {
+            VStack {
+                Text("You done")
+                TabView {
+                    StatusView().tabItem {
+                        Text("Status")
+                    }
+                    IntegrationListView().tabItem {
+                        Text("Integrations")
+                    }
                 }
             }
         }

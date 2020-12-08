@@ -28,7 +28,9 @@ struct IntegrationListView: View {
                 if let integrationListForKey = integrationListByStateValue[key] {
                     Section(header: Text(key.rawValue)) {
                         ForEach(integrationListForKey) { integration in
-                            Text(integration.name)
+                            StackNavigationLinkView(destination: IntegrationView(integration: integration)) {
+                                Text(integration.name)
+                            }
                         }
                     }.collapsible(true)
                 }
