@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct StatusView: View {
+    @State var taskList: [Task] = [
+        Task(text: "something"),
+        Task(text: "somethign else")
+    ]
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
@@ -19,25 +23,39 @@ struct StatusView: View {
     @State private var prevDate: Date?
     
     func dateString() -> String { dateFormatter.string(from: date) }
+    
 
     var body: some View {
         VStack {
-            HStack {
-                Text(dateString())
-                    .onTapGesture {
-                        showDatePicker.toggle()
+            Group {
+                HStack {
+                    Text(dateString())
+                        .onTapGesture {
+                            showDatePicker.toggle()
+                        }
+                        .popover(
+                            isPresented: $showDatePicker,
+                            arrowEdge: .bottom
+                        ) {
+                            DatePicker(dateString(), selection: $date, in: ...Date(), displayedComponents: .date).datePickerStyle(GraphicalDatePickerStyle())
+                                .labelsHidden()
+                        }
+                        
+                    Spacer()
+                }
+                VStack {
+                    ForEach(taskList) { task in
+                        TaskView(text: task.text)
                     }
-                    .popover(
-                        isPresented: $showDatePicker,
-                        arrowEdge: .bottom
-                    ) {
-                        DatePicker(dateString(), selection: $date, in: ...Date(), displayedComponents: .date).datePickerStyle(GraphicalDatePickerStyle())
-                            .labelsHidden()
-                    }
-                    
+                }
                 Spacer()
             }
-            Spacer()
+            HStack {
+                Spacer()
+                Button(action: { print("Copy") }) { Text("Copy") }
+                Button(action: { print("Send") }) { Text("Send") }
+            }
+            
         }
     }
 }

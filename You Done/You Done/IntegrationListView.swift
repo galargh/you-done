@@ -20,27 +20,22 @@ struct IntegrationListView: View {
 
     var body: some View {
         List {
-            if let installedIntegrationList = integrationListByStateValue[.installed] {
-                Section(header: Text("Installed")) {
-                    ForEach(installedIntegrationList) { integration in
-                        HStack {
-                            Text(integration.name)
-                            Spacer()
-                            Button(action: { integrationName = integration.name }, label: { Text("Configure") } )
+            ForEach(Integration.State.allCases, id: \.rawValue) { state in
+                if let availableIntegrationList = integrationListByStateValue[state] {
+                    Section(header: Text(state.rawValue)) {
+                        ForEach(availableIntegrationList) { integration in
+                            HStack {
+                                Text(integration.name)
+                                Spacer()
+                                if (integration.state == .installed) {
+                                    Button(action: { integrationName = integration.name }, label: { Text("Configure") } )
+                                } else if (integration.state == .available) {
+                                    Button(action: { print("Install") }, label: { Text("Install") } )
+                                }
+                            }
                         }
-                    }
-                }.collapsible(true)
-            }
-            if let availableIntegrationList = integrationListByStateValue[.available] {
-                Section(header: Text("Available")) {
-                    ForEach(availableIntegrationList) { integration in
-                        HStack {
-                            Text(integration.name)
-                            Spacer()
-                            Button(action: { print("Install") }, label: { Text("Install") } )
-                        }
-                    }
-                }.collapsible(true)
+                    }.collapsible(true)
+                }
             }
         }.listStyle(SidebarListStyle())
     }
