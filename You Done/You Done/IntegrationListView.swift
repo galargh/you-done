@@ -9,12 +9,8 @@ import SwiftUI
 
 
 struct IntegrationListView: View {
-    var integrationList: [Integration] = [
-        Integration(name: "GitHub", state: .installed),
-        Integration(name: "Google Calendar", state: .installed),
-        Integration(name: "Slack", state: .available),
-        Integration(name: "Zoom", state: .available)
-    ]
+    @Binding var integrationName: String?
+    var integrationList: [Integration]
     var integrationListByStateValue: [Integration.State: [Integration]] {
         Dictionary(
             grouping: integrationList,
@@ -28,19 +24,13 @@ struct IntegrationListView: View {
                 if let integrationListForKey = integrationListByStateValue[key] {
                     Section(header: Text(key.rawValue)) {
                         ForEach(integrationListForKey) { integration in
-                            StackNavigationLinkView(destination: IntegrationView(integration: integration)) {
-                                Text(integration.name)
+                            Text(integration.name).onTapGesture {
+                                integrationName = integration.name
                             }
                         }
                     }.collapsible(true)
                 }
             }
         }.listStyle(SidebarListStyle())
-    }
-}
-
-struct IntegrationListView_Previews: PreviewProvider {
-    static var previews: some View {
-        IntegrationListView()
     }
 }

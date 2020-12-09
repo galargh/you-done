@@ -8,17 +8,16 @@
 import SwiftUI
 
 struct IntegrationView: View {
+    @Binding var integrationName: String?
     var integration: Integration
     
     var body: some View {
-        StackNavigationResetView {
-            Text(integration.name)
-        }.frame(minWidth: 400, maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-struct IntegrationView_Previews: PreviewProvider {
-    static var previews: some View {
-        IntegrationView(integration: Integration(name: "GitHub", state: .installed))
+        VStack {
+            Text(integration.name).onTapGesture {
+                integrationName = nil
+            }
+        }
+        .frame(minWidth: 400, maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.black)
     }
 }
