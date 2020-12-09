@@ -20,16 +20,27 @@ struct IntegrationListView: View {
 
     var body: some View {
         List {
-            ForEach(Integration.State.allCases, id: \.rawValue) { key in
-                if let integrationListForKey = integrationListByStateValue[key] {
-                    Section(header: Text(key.rawValue)) {
-                        ForEach(integrationListForKey) { integration in
-                            Text(integration.name).onTapGesture {
-                                integrationName = integration.name
-                            }
+            if let installedIntegrationList = integrationListByStateValue[.installed] {
+                Section(header: Text("Installed")) {
+                    ForEach(installedIntegrationList) { integration in
+                        HStack {
+                            Text(integration.name)
+                            Spacer()
+                            Button(action: { integrationName = integration.name }, label: { Text("Configure") } )
                         }
-                    }.collapsible(true)
-                }
+                    }
+                }.collapsible(true)
+            }
+            if let availableIntegrationList = integrationListByStateValue[.available] {
+                Section(header: Text("Available")) {
+                    ForEach(availableIntegrationList) { integration in
+                        HStack {
+                            Text(integration.name)
+                            Spacer()
+                            Button(action: { print("Install") }, label: { Text("Install") } )
+                        }
+                    }
+                }.collapsible(true)
             }
         }.listStyle(SidebarListStyle())
     }
