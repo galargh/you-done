@@ -13,6 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var popover: NSPopover!
     var statusItem: NSStatusItem!
+    var eventMonitor: EventMonitor!
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -31,7 +32,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let button = statusItem.button {
             button.image = NSImage(named: "Cupcake")?.resize(toSize: NSSize(width: 16, height: 16))
             button.action = #selector(togglePopover(_:))
-       }
+        }
+        
+        eventMonitor = EventMonitor(
+            mask: [.leftMouseDown, .rightMouseDown],
+            handler: { e in
+                NSApp.keyWindow?.makeFirstResponder(nil)
+                return e
+            }
+        )
+        eventMonitor.start()
     }
 
     @objc func togglePopover(_ sender: AnyObject?) {

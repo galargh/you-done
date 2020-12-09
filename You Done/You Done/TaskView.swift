@@ -22,9 +22,9 @@ struct TaskView: View {
                 //onEditingChanged: { _ in isEditing = true },
                 onCommit: {
                     print("commit")
-                    DispatchQueue.main.async {
+                    /*DispatchQueue.main.async {
                         NSApp.keyWindow?.makeFirstResponder(nil)
-                    }
+                    }*/
                 }
             )
             Spacer()

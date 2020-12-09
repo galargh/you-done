@@ -10,6 +10,16 @@ import SwiftUI
 struct StatusView: View {
     @State var taskList: [Task] = [
         Task(text: "something"),
+        Task(text: "somethign else"),
+        Task(text: "something"),
+        Task(text: "somethign else"),
+        Task(text: "something"),
+        Task(text: "somethign else"),
+        Task(text: "something"),
+        Task(text: "somethign else"),
+        Task(text: "something"),
+        Task(text: "somethign else"),
+        Task(text: "something"),
         Task(text: "somethign else")
     ]
     var dateFormatter: DateFormatter {
@@ -43,9 +53,11 @@ struct StatusView: View {
                         
                     Spacer()
                 }
-                VStack {
-                    ForEach(taskList) { task in
-                        TaskView(text: task.text)
+                ScrollView {
+                    VStack {
+                        ForEach(taskList) { task in
+                            TaskView(text: task.text)
+                        }
                     }
                 }
                 Spacer()
