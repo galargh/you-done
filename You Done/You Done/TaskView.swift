@@ -19,7 +19,7 @@ struct TaskView: View {
                     get: { print("get"); return self.text },
                     set: { print("set"); self.text = $0 }
                 ),
-                //onEditingChanged: { _ in isEditing = true },
+                onEditingChanged: { isEditing = $0 },
                 onCommit: {
                     print("commit")
                     /*DispatchQueue.main.async {
@@ -28,7 +28,7 @@ struct TaskView: View {
                 }
             )
             Spacer()
-            if (isEditing) { Button(action: { print("Save") } ) { Text("Save") } }
+            Button(action: { print("Save") } ) { Text("Save") }.disabled(!isEditing)
             Button(action: { print("Delete") }) { Text("Delete") }
         }
     }
