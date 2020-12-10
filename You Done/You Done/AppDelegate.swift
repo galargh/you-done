@@ -8,9 +8,6 @@
 import Cocoa
 import SwiftUI
 
-
-let OAuth2AppDidReceiveCallbackNotification = NSNotification.Name(rawValue: "OAuth2AppDidReceiveCallback")
-
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -43,11 +40,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         eventMonitor = EventMonitor(
             mask: [.leftMouseDown, .rightMouseDown],
             handler: { e in
-                NSApp.keyWindow?.makeFirstResponder(nil)
+                //NSApp.keyWindow?.makeFirstResponder(nil)
+                self.popover.contentViewController?.view.window?.makeFirstResponder(nil)
                 return e
             }
         )
         eventMonitor.start()
+ 
         
         NSAppleEventManager.shared().setEventHandler(
             self,

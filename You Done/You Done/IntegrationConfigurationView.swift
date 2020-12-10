@@ -9,6 +9,7 @@ import SwiftUI
 
 struct IntegrationConfigurationView: View {
     @Binding var integrationName: String?
+    @State var path: String = ""
     var integration: Integration
     
     var body: some View {
@@ -24,6 +25,18 @@ struct IntegrationConfigurationView: View {
                 Spacer()
             }
             VStack {
+                HStack {
+                    TextField("", text: $path)
+                    Spacer()
+                    Button(action: {
+                        integration.request(path: path) { response, error in
+                            print("response: \(response)")
+                            print("error: \(error)")
+                        }
+                    }) {
+                        Text("Test")
+                    }
+                }
                 Spacer()
                 HStack {
                     Spacer()

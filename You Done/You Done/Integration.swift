@@ -82,6 +82,7 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
         
         perform(request: req) { response in
             do {
+                print(response)
                 let dict = try response.responseJSON()
                 DispatchQueue.main.async() {
                     callback(dict, nil)
@@ -111,6 +112,15 @@ class GithubIntegration: Integration {
         request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
         return request
     }
+    
+    func user(callback: @escaping ((OAuth2JSON?, Error?) -> Void)) {
+        request(path: "user", callback: callback) // "name", "id", "login"
+    }
+    
+    func events(callback: @escaping ((OAuth2JSON?, Error?) -> Void)) {
+        request(path: "users/gfjalar/events", callback: callback) // "name", "id", "login"
+    }
+
 }
 
 class ZoomIntegration: Integration {

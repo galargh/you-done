@@ -11,16 +11,7 @@ struct StatusView: View {
     @State var taskList: [Task] = [
         Task(text: "something"),
         Task(text: "somethign else"),
-        Task(text: "something"),
-        Task(text: "somethign else"),
-        Task(text: "something"),
-        Task(text: "somethign else"),
-        Task(text: "something"),
-        Task(text: "somethign else"),
-        Task(text: "something"),
-        Task(text: "somethign else"),
-        Task(text: "something"),
-        Task(text: "somethign else")
+        Task(text: "something")
     ]
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
