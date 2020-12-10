@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @State var integrationName: String?
-    var integrationList: [Integration] = [GithubIntegration(), SlackIntegration(), GoogleCalendarIntegration(), ZoomIntegration()]
+    @EnvironmentObject var integrationStore: IntegrationStore
+    
     var body: some View {
         ZStack {
             VStack {
@@ -18,14 +19,15 @@ struct ContentView: View {
                     StatusView().tabItem {
                         Text("Status")
                     }
-                    IntegrationListView(integrationName: $integrationName, integrationList: integrationList).tabItem {
+                    IntegrationListView(integrationName: $integrationName).tabItem {
                         Text("Integrations")
                     }
                 }
             }
-            ForEach(integrationList) { integration in
-                IntegrationView(integrationName: $integrationName, integration: integration)
+            ForEach(integrationStore.all) { integration in
+                IntegrationConfigurationView(integrationName: $integrationName, integration: integration)
                     .visibility(hidden: .constant(integration.name != integrationName))
+                    .onReceive(integration.$isInstalled, perform: { _ in integrationStore.objectWillChange.send() })
             }
         }
     }

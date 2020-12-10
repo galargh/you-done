@@ -8,12 +8,16 @@
 import Cocoa
 import SwiftUI
 
+
+let OAuth2AppDidReceiveCallbackNotification = NSNotification.Name(rawValue: "OAuth2AppDidReceiveCallback")
+
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     var popover: NSPopover!
     var statusItem: NSStatusItem!
     var eventMonitor: EventMonitor!
+    var integrationStore: IntegrationStore!
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -21,11 +25,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Add `@Environment(\.managedObjectContext)` in the views that will need the context.
         let contentView = ContentView().environment(\.managedObjectContext, persistentContainer.viewContext)
 
+        integrationStore = IntegrationStore()
+        
         // Create the popover and set the content view.
         popover = NSPopover()
         popover.contentSize = NSSize(width: 400, height: 300)
         popover.behavior = .transient
-        popover.contentViewController = NSHostingController(rootView: contentView)
+        popover.contentViewController = NSHostingController(rootView: contentView.environmentObject(integrationStore))
 
         // Create the status item
         statusItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
@@ -65,15 +71,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func handleURLEvent(_ event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
         if let urlString = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue {
             if let url = URL(string: urlString), "youdone" == url.scheme {
-                print(url.host)
-                print(url.fragment)
-                print(url.lastPathComponent)
-                print(url.path)
-                print(url.pathComponents)
-                print(url.pathExtension)
-                print(url.relativePath)
-                print(urlString)
-                //NotificationCenter.default.post(name: OAuth2AppDidReceiveCallbackNotification, object: url)
+                if (url.host == "oauth2") {
+                    NotificationCenter.default.post(name: Integration.Notification, object: url)
+                }
+                if (!popover.isShown) {
+                    if let button = statusItem.button {
+                        popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
+                        popover.contentViewController?.view.window?.becomeKey()
+                    }
+                }
             }
         }
         else {
