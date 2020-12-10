@@ -42,6 +42,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         )
         eventMonitor.start()
+        
+        NSAppleEventManager.shared().setEventHandler(
+            self,
+            andSelector: #selector(handleURLEvent(_:withReply:)),
+            forEventClass: AEEventClass(kInternetEventClass),
+            andEventID: AEEventID(kAEGetURL)
+        )
     }
 
     @objc func togglePopover(_ sender: AnyObject?) {
@@ -52,6 +59,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
                 popover.contentViewController?.view.window?.becomeKey()
             }
+        }
+    }
+    
+    @objc func handleURLEvent(_ event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
+        if let urlString = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue {
+            if let url = URL(string: urlString), "youdone" == url.scheme {
+                print(url.host)
+                print(url.fragment)
+                print(url.lastPathComponent)
+                print(url.path)
+                print(url.pathComponents)
+                print(url.pathExtension)
+                print(url.relativePath)
+                print(urlString)
+                //NotificationCenter.default.post(name: OAuth2AppDidReceiveCallbackNotification, object: url)
+            }
+        }
+        else {
+            NSLog("No valid URL to handle")
         }
     }
 

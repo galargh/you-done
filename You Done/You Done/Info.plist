@@ -28,5 +28,16 @@
 	<string>NSApplication</string>
 	<key>LSUIElement</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>youdone</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>com.gfjalar.youdone</string>
+		</dict>
+	</array>
 </dict>
 </plist>
