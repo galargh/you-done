@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -24,6 +24,7 @@
 		68CBC7A625811B3200709835 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7A525811B3200709835 /* Task.swift */; };
 		68CBC7AB25812FB600709835 /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7AA25812FB600709835 /* TaskView.swift */; };
 		68CBC7B925815F3C00709835 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7B825815F3C00709835 /* EventMonitor.swift */; };
+		68CBC7BF25820A6200709835 /* OAuth2 in Frameworks */ = {isa = PBXBuildFile; productRef = 68CBC7BE25820A6200709835 /* OAuth2 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68CBC7BF25820A6200709835 /* OAuth2 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,6 +183,9 @@
 			dependencies = (
 			);
 			name = "You Done";
+			packageProductDependencies = (
+				68CBC7BE25820A6200709835 /* OAuth2 */,
+			);
 			productName = "You Done";
 			productReference = 68CBC6D7257E943C00709835 /* You Done.app */;
 			productType = "com.apple.product-type.application";
@@ -252,6 +257,9 @@
 				Base,
 			);
 			mainGroup = 68CBC6CE257E943C00709835;
+			packageReferences = (
+				68CBC7BD25820A6200709835 /* XCRemoteSwiftPackageReference "OAuth2" */,
+			);
 			productRefGroup = 68CBC6D8257E943C00709835 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -632,6 +640,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		68CBC7BD25820A6200709835 /* XCRemoteSwiftPackageReference "OAuth2" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/p2/OAuth2.git";
+			requirement = {
+				kind = exactVersion;
+				version = 5.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		68CBC7BE25820A6200709835 /* OAuth2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 68CBC7BD25820A6200709835 /* XCRemoteSwiftPackageReference "OAuth2" */;
+			productName = OAuth2;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		68CBC6DE257E943C00709835 /* You_Done.xcdatamodeld */ = {
