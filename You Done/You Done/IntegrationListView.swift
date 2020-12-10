@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct IntegrationListView: View {
     @Binding var integrationName: String?
     var integrationList: [Integration]
@@ -30,7 +29,20 @@ struct IntegrationListView: View {
                                 if (integration.state == .installed) {
                                     Button(action: { integrationName = integration.name }, label: { Text("Configure") } )
                                 } else if (integration.state == .available) {
-                                    Button(action: { print(integration.oauth2); print(integration.oauth2?.useKeychain) }, label: { Text("Install") } )
+                                    Button(action: {
+                                        integration.oauth2.authorize {
+                                        //integration.oauth2.authorizeEmbedded(from: NSApp.windows[1]) { // doesn't work with .transient
+                                            authParameters, error in
+                                                if let params = authParameters {
+                                                    print("Authorized! Access token is in `oauth2.accessToken`")
+                                                    print(integration.oauth2.accessToken)
+                                                    print("Authorized! Additional parameters: \(params)")
+                                                }
+                                                else {
+                                                    print("Authorization was canceled or went wrong: \(error)")   // error will not be nil
+                                                }
+                                        }
+                                    }, label: { Text("Install") } ).disabled(integration.oauth2.isAuthorizing)
                                 }
                             }
                         }

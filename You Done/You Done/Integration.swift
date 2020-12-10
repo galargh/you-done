@@ -8,36 +8,13 @@
 import Foundation
 import OAuth2
 
-class Integration: Identifiable {
+class Integration: OAuth2DataLoader, Identifiable {
     let id = UUID()
     let name: String
-    let authorizeURI: String
-    let tokenURI: String
-    let scopeList: [String]
-    let secretInBody: Bool
-    
-    lazy var clientID: String? = Bundle.main.object(forInfoDictionaryKey: "\(name) Client ID") as? String
-    lazy var clientSecret: String? = Bundle.main.object(forInfoDictionaryKey: "\(name) Client Secret") as? String
-    lazy var oauth2: OAuth2CodeGrant? = {
-        if let id = clientID, let secret = clientSecret {
-            return OAuth2CodeGrant(settings: [
-                "client_id": id,
-                "client_secret": secret,
-                "authorize_uri": authorizeURI,
-                "token_uri": tokenURI,
-                "scope": scopeList.joined(separator: " "),
-                "redirect_uris": ["youdone://oauth2/\(name)"],
-                "secret_in_body": secretInBody,
-                "verbose": true,
-                "keychain": false
-            ])
-        } else {
-            return nil
-        }
-    }()
+    let isClientDefined: Bool
     
     var state: State {
-        clientID == nil || clientSecret == nil ? .upcoming : .available
+        isClientDefined ? .available : .upcoming
     }
     
     init(name: String,
@@ -46,10 +23,27 @@ class Integration: Identifiable {
          scopeList: [String] = [],
          secretInBody: Bool = false) {
         self.name = name
-        self.authorizeURI = authorizeURI
-        self.tokenURI = tokenURI
-        self.scopeList = scopeList
-        self.secretInBody = secretInBody
+        
+        let clientID: String? = Bundle.main.object(forInfoDictionaryKey: "\(name) Client ID") as? String
+        let clientSecret: String? = Bundle.main.object(forInfoDictionaryKey: "\(name) Client Secret") as? String
+        
+        if let id = clientID, let secret = clientSecret {
+            self.isClientDefined = true
+            super.init(oauth2: OAuth2CodeGrant(settings: [
+                "client_id": id,
+                "client_secret": secret ,
+                "authorize_uri": authorizeURI,
+                "token_uri": tokenURI,
+                "scope": scopeList.joined(separator: " "),
+                "redirect_uris": ["youdone://oauth2/\(name)"],
+                "secret_in_body": secretInBody,
+                "verbose": true,
+                "keychain": false
+            ]))
+        } else {
+            self.isClientDefined = false
+            super.init(oauth2: OAuth2CodeGrant(settings: [:]))
+        }
     }
     
     enum State: String, CaseIterable {
