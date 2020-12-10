@@ -9,12 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State var integrationName: String?
-    var integrationList: [Integration] = [
-        Integration(name: "GitHub", state: .installed),
-        Integration(name: "Google Calendar", state: .installed),
-        Integration(name: "Slack", state: .available),
-        Integration(name: "Zoom", state: .available)
-    ]
+    var integrationList: [Integration] = [GithubIntegration(), SlackIntegration(), GoogleCalendarIntegration(), ZoomIntegration()]
     var body: some View {
         ZStack {
             VStack {

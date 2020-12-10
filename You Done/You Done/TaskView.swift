@@ -16,8 +16,8 @@ struct TaskView: View {
             TextField(
                 "",
                 text: Binding(
-                    get: { print("get"); return self.text },
-                    set: { print("set"); self.text = $0 }
+                    get: { return self.text },
+                    set: { self.text = $0 }
                 ),
                 onEditingChanged: { isEditing = $0 },
                 onCommit: {

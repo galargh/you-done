@@ -30,7 +30,7 @@ struct IntegrationListView: View {
                                 if (integration.state == .installed) {
                                     Button(action: { integrationName = integration.name }, label: { Text("Configure") } )
                                 } else if (integration.state == .available) {
-                                    Button(action: { print("Install") }, label: { Text("Install") } )
+                                    Button(action: { print(integration.oauth2); print(integration.oauth2?.useKeychain) }, label: { Text("Install") } )
                                 }
                             }
                         }
