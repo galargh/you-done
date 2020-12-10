@@ -7,6 +7,7 @@
 
 import Foundation
 import OAuth2
+import SwiftyJSON
 
 class IntegrationStore: ObservableObject {
     @Published var all: [Integration] = [
@@ -76,16 +77,16 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
         oauth2.request(forURL: url)
     }
     
-    func request(path: String, callback: @escaping ((OAuth2JSON?, Error?) -> Void)) {
+    func request(path: String, callback: @escaping ((JSON?, Error?) -> Void)) {
         let url = baseURL.appendingPathComponent(path)
         let req = request(forURL: url)
         
         perform(request: req) { response in
             do {
-                print(response)
-                let dict = try response.responseJSON()
+                let data = try response.responseData()
+                let json = try JSON(data: data)
                 DispatchQueue.main.async() {
-                    callback(dict, nil)
+                    callback(json, nil)
                 }
             }
             catch let error {
@@ -113,11 +114,11 @@ class GithubIntegration: Integration {
         return request
     }
     
-    func user(callback: @escaping ((OAuth2JSON?, Error?) -> Void)) {
+    func user(callback: @escaping ((JSON?, Error?) -> Void)) {
         request(path: "user", callback: callback) // "name", "id", "login"
     }
     
-    func events(callback: @escaping ((OAuth2JSON?, Error?) -> Void)) {
+    func events(callback: @escaping ((JSON?, Error?) -> Void)) {
         request(path: "users/gfjalar/events", callback: callback) // "name", "id", "login"
     }
 

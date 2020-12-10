@@ -26,6 +26,7 @@
 		68CBC7B925815F3C00709835 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7B825815F3C00709835 /* EventMonitor.swift */; };
 		68CBC7BF25820A6200709835 /* OAuth2 in Frameworks */ = {isa = PBXBuildFile; productRef = 68CBC7BE25820A6200709835 /* OAuth2 */; };
 		68CBC7DD258278D500709835 /* IntegrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7DC258278D500709835 /* IntegrationView.swift */; };
+		68CBC7E32582D4DD00709835 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 68CBC7E22582D4DD00709835 /* SwiftyJSON */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68CBC7E32582D4DD00709835 /* SwiftyJSON in Frameworks */,
 				68CBC7BF25820A6200709835 /* OAuth2 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -198,6 +200,7 @@
 			name = "You Done";
 			packageProductDependencies = (
 				68CBC7BE25820A6200709835 /* OAuth2 */,
+				68CBC7E22582D4DD00709835 /* SwiftyJSON */,
 			);
 			productName = "You Done";
 			productReference = 68CBC6D7257E943C00709835 /* You Done.app */;
@@ -272,6 +275,7 @@
 			mainGroup = 68CBC6CE257E943C00709835;
 			packageReferences = (
 				68CBC7BD25820A6200709835 /* XCRemoteSwiftPackageReference "OAuth2" */,
+				68CBC7E12582D4DD00709835 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 			);
 			productRefGroup = 68CBC6D8257E943C00709835 /* Products */;
 			projectDirPath = "";
@@ -666,6 +670,14 @@
 				version = 5.2.0;
 			};
 		};
+		68CBC7E12582D4DD00709835 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
+			requirement = {
+				kind = exactVersion;
+				version = 5.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -673,6 +685,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 68CBC7BD25820A6200709835 /* XCRemoteSwiftPackageReference "OAuth2" */;
 			productName = OAuth2;
+		};
+		68CBC7E22582D4DD00709835 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 68CBC7E12582D4DD00709835 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
 		};
 /* End XCSwiftPackageProductDependency section */
 
