@@ -14,6 +14,8 @@ struct IntegrationView: View {
     var body: some View {
         VStack {
             Text(integration.name).onTapGesture {
+                //print(Bundle.main.object(forInfoDictionaryKey: "GitHub Client ID"))
+                print(integration.clientId)
                 integrationName = nil
             }
         }
