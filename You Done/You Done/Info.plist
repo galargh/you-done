@@ -39,5 +39,9 @@
 			<string>com.gfjalar.youdone</string>
 		</dict>
 	</array>
+	<key>Github Client ID</key>
+	<string>$(GITHUB_CLIENT_ID)</string>
+	<key>Github Client Secret</key>
+	<string>$(GITHUB_CLIENT_SECRET)</string>
 </dict>
 </plist>
