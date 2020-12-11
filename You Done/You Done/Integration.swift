@@ -132,6 +132,7 @@ class GithubIntegration: Integration {
             return self.request(path: "users/\(user.login)/events").map { response -> [Event] in
                 let data = try response.responseData()
                 let decoder = JSONDecoder()
+                //print(JSON(data))
                 return try decoder.decode([Event].self, from: data)
             }
         }.map { eventList in
@@ -185,7 +186,7 @@ class GithubIntegration: Integration {
             case "PullRequestReviewEvent" where ["created"].contains(payload.action):
                 return "\(payload.review!.state.capitalized) \(payload.pull_request!.title)"
             case "PushEvent":
-                return "Pushed \(payload.commits!.first!.message)"
+                return "Pushed \(payload.commits!.last!.message)"
             default:
                 return nil
             }
