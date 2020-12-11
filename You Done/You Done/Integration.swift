@@ -153,15 +153,69 @@ class GithubIntegration: Integration {
     }
 
     
-    func events(callback: @escaping (([Event]?, Error?) -> Void)) {
-        request(path: "users/gfjalar/events", parse: parseJSONDecoder([Event].self), callback: callback)
+    func events(date: Date = Date(), callback: @escaping (([Event]?, Error?) -> Void)) {
+        let day = date.toDay()
+        request(path: "users/gfjalar/events",
+                parse: parseJSONDecoder([Event].self) >>> { eventListOpt, errorOpt in
+                    if let eventList = eventListOpt {
+                        let filteredEventList = eventList.filter { event in
+                            event.toDate().toDay() == day && event.toString() != nil
+                        }
+                        return (filteredEventList, errorOpt)
+                    } else {
+                        return (eventListOpt, errorOpt)
+                    }
+                },
+                callback: callback)
     }
     
-    struct Event: Codable {
+    struct Event: Identifiable, Equatable, Codable {
         var id: String
         var type: String
         var created_at: String
+        var payload: Payload
         
+        struct Payload: Codable {
+            var action: String?
+            var pull_request: PullRequest?
+            var review: Review?
+            var commits: [Commit]?
+        }
+
+        struct PullRequest: Codable {
+            var id: Int
+            var title: String
+        }
+        
+        struct Commit: Codable {
+            var sha: String
+            var message: String
+        }
+        
+        struct Review: Codable {
+            var state: String
+        }
+        
+        func toString() -> String? {
+            switch type {
+            case "PullRequestEvent" where ["opened", "closed", "reopened"].contains(payload.action):
+                return "\(payload.action!.capitalized) \(payload.pull_request!.title)"
+            case "PullRequestReviewEvent" where ["created"].contains(payload.action):
+                return "\(payload.review!.state.capitalized) \(payload.pull_request!.title)"
+            case "PushEvent":
+                return "Pushed \(payload.commits!.first!.message)"
+            default:
+                return nil
+            }
+        }
+        
+        func toDate() -> Date {
+            return ISO8601DateFormatter().date(from: created_at)!
+        }
+        
+        static func == (lhs: GithubIntegration.Event, rhs: GithubIntegration.Event) -> Bool {
+            lhs.id == rhs.id
+        }
     }
 }
 

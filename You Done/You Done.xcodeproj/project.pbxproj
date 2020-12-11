@@ -28,6 +28,7 @@
 		68CBC7DD258278D500709835 /* IntegrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7DC258278D500709835 /* IntegrationView.swift */; };
 		68CBC7E32582D4DD00709835 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 68CBC7E22582D4DD00709835 /* SwiftyJSON */; };
 		68CBC7E82583641900709835 /* Composition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7E72583641900709835 /* Composition.swift */; };
+		68CBC7ED258381DF00709835 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7EC258381DF00709835 /* Date.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		68CBC7C8258212DC00709835 /* oauth2.secret.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = oauth2.secret.xcconfig; sourceTree = "<group>"; };
 		68CBC7DC258278D500709835 /* IntegrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationView.swift; sourceTree = "<group>"; };
 		68CBC7E72583641900709835 /* Composition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Composition.swift; sourceTree = "<group>"; };
+		68CBC7EC258381DF00709835 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +135,7 @@
 				68CBC729257F88F800709835 /* IntegrationListView.swift */,
 				68CBC7B825815F3C00709835 /* EventMonitor.swift */,
 				68CBC746257F944C00709835 /* Integration.swift */,
+				68CBC7EC258381DF00709835 /* Date.swift */,
 				68CBC7DC258278D500709835 /* IntegrationView.swift */,
 				68CBC763257FAFFA00709835 /* IntegrationConfigurationView.swift */,
 				68CBC7AA25812FB600709835 /* TaskView.swift */,
@@ -324,6 +327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				68CBC6E0257E943C00709835 /* You_Done.xcdatamodeld in Sources */,
+				68CBC7ED258381DF00709835 /* Date.swift in Sources */,
 				68CBC6DD257E943C00709835 /* ContentView.swift in Sources */,
 				68CBC7A625811B3200709835 /* Task.swift in Sources */,
 				68CBC7B925815F3C00709835 /* EventMonitor.swift in Sources */,

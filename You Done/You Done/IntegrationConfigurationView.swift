@@ -41,7 +41,7 @@ struct IntegrationConfigurationView: View {
                     Spacer()
                     Button(action: {
                         (integration as! GithubIntegration).events { events, error in
-                            print("events: \(events)")
+                            print("events: \(events?.map { event in return event.toString() })")
                             print("error: \(error)")
                         }
                     }) {
