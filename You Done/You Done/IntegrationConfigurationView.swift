@@ -29,10 +29,10 @@ struct IntegrationConfigurationView: View {
                     TextField("", text: $path)
                     Spacer()
                     Button(action: {
-                        integration.request(path: path, parse: integration.parseSwiftyJSON) { response, error in
-                            print("response: \(response)")
-                            print("error: \(error)")
-                        }
+                        integration.request(path: path).subscribe(
+                            onNext: { response in print(response) },
+                            onError: { error in print(error) }
+                        )
                     }) {
                         Text("Test")
                     }
@@ -40,10 +40,10 @@ struct IntegrationConfigurationView: View {
                 HStack {
                     Spacer()
                     Button(action: {
-                        (integration as! GithubIntegration).events { events, error in
-                            print("events: \(events?.map { event in return event.toString() })")
-                            print("error: \(error)")
-                        }
+                        (integration as! GithubIntegration).events().subscribe(
+                            onNext: { response in print(response) },
+                            onError: { error in print(error) }
+                        )
                     }) {
                         Text("Events")
                     }

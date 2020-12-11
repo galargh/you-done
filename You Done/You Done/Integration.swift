@@ -77,59 +77,23 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
     func request(forURL url: URL) -> URLRequest {
         oauth2.request(forURL: url)
     }
-    
-    func parseData(_ response: OAuth2Response) -> (Data?, Error?) {
-        do {
-            let data = try response.responseData()
-            return (data, nil)
-        } catch let error {
-            return (nil, error)
-        }
-    }
-    
-    func parseSwiftyJSON(_ response: OAuth2Response) -> (JSON?, Error?) {
-        do {
-            let data = try response.responseData()
-            let json = try JSON(data: data)
-            return (json, nil)
-        } catch let error {
-            return (nil, error)
-        }
-    }
-    
-    func parseIdentity(_ response: OAuth2Response) -> OAuth2Response {
-        return response
-    }
-    
-    func parseJSONDecoder<T: Decodable>(_ type: T.Type) -> ((OAuth2Response) -> (T?, Error?)) {
-        return { response in
-            do {
-                let data = try response.responseData()
-                let decoder = JSONDecoder()
-                let decodedData = try decoder.decode(type, from: data)
-                return (decodedData, nil)
-            } catch let error {
-                return (nil, error)
+
+    func request(path: String) -> Future<OAuth2Response> {
+        return Future { completion in
+            let url = self.baseURL.appendingPathComponent(path)
+            let req = self.request(forURL: url)
+            self.perform(request: req) { response in
+                completion(.success(response))
             }
         }
     }
     
-    func request<DesiredResponse>(path: String,
-                                  parse: @escaping ((OAuth2Response) -> DesiredResponse),
-                                  callback: @escaping ((DesiredResponse) -> Void)) {
-        let url = baseURL.appendingPathComponent(path)
-        let req = request(forURL: url)
-        
-        perform(request: req) { response in
-            DispatchQueue.main.async() {
-                callback(parse(response))
-            }
+    func pull(date: Date = Date()) -> Future<[Task]> {
+        return Future { completion in
+            completion(.success([]))
         }
     }
-    
-    func request(path: String, callback: @escaping ((OAuth2Response) -> Void)) {
-        request(path: path, parse: parseIdentity, callback: callback)
-    }
+
 }
 
 class GithubIntegration: Integration {
@@ -148,25 +112,43 @@ class GithubIntegration: Integration {
         return request
     }
     
-    func user(callback: @escaping ((JSON?, Error?) -> Void)) {
-        request(path: "user", parse: parseSwiftyJSON, callback: callback) // "name", "id", "login"
+    func user() -> Future<User> {
+        return request(path: "user").map { response in
+            let data = try response.responseData()
+            let decoder = JSONDecoder()
+            return try decoder.decode(User.self, from: data)
+        }
+    }
+    
+    struct User: Codable {
+        var name: String
+        var id: Int
+        var login: String
     }
 
     
-    func events(date: Date = Date(), callback: @escaping (([Event]?, Error?) -> Void)) {
-        let day = date.toDay()
-        request(path: "users/gfjalar/events",
-                parse: parseJSONDecoder([Event].self) >>> { eventListOpt, errorOpt in
-                    if let eventList = eventListOpt {
-                        let filteredEventList = eventList.filter { event in
-                            event.toDate().toDay() == day && event.toString() != nil
-                        }
-                        return (filteredEventList, errorOpt)
-                    } else {
-                        return (eventListOpt, errorOpt)
-                    }
-                },
-                callback: callback)
+    func events(date: Date = Date()) -> Future<[Event]> {
+        return user().flatMap { user in
+            return self.request(path: "users/\(user.login)/events").map { response -> [Event] in
+                let data = try response.responseData()
+                let decoder = JSONDecoder()
+                return try decoder.decode([Event].self, from: data)
+            }
+        }.map { eventList in
+            let day = date.toDay()
+            return eventList.filter { event in
+                event.toDate().toDay() == day && event.toString() != nil
+            }
+        }
+    }
+    
+    override func pull(date: Date = Date()) -> Future<[Task]> {
+        return events(date: date).map { eventList in
+            return eventList.map { event in
+                let text = event.toString()!
+                return Task(id: text, text: text)
+            }
+        }
     }
     
     struct Event: Identifiable, Equatable, Codable {

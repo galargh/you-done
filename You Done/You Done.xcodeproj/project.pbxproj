@@ -29,6 +29,8 @@
 		68CBC7E32582D4DD00709835 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 68CBC7E22582D4DD00709835 /* SwiftyJSON */; };
 		68CBC7E82583641900709835 /* Composition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7E72583641900709835 /* Composition.swift */; };
 		68CBC7ED258381DF00709835 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7EC258381DF00709835 /* Date.swift */; };
+		68CBC7F2258391F600709835 /* Microfutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7F1258391F600709835 /* Microfutures.swift */; };
+		68CBC7F725839DB000709835 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7F625839DB000709835 /* Sequence.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +79,8 @@
 		68CBC7DC258278D500709835 /* IntegrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationView.swift; sourceTree = "<group>"; };
 		68CBC7E72583641900709835 /* Composition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Composition.swift; sourceTree = "<group>"; };
 		68CBC7EC258381DF00709835 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		68CBC7F1258391F600709835 /* Microfutures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Microfutures.swift; sourceTree = "<group>"; };
+		68CBC7F625839DB000709835 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,12 +139,14 @@
 				68CBC729257F88F800709835 /* IntegrationListView.swift */,
 				68CBC7B825815F3C00709835 /* EventMonitor.swift */,
 				68CBC746257F944C00709835 /* Integration.swift */,
+				68CBC7F1258391F600709835 /* Microfutures.swift */,
 				68CBC7EC258381DF00709835 /* Date.swift */,
 				68CBC7DC258278D500709835 /* IntegrationView.swift */,
 				68CBC763257FAFFA00709835 /* IntegrationConfigurationView.swift */,
 				68CBC7AA25812FB600709835 /* TaskView.swift */,
 				68CBC7E72583641900709835 /* Composition.swift */,
 				68CBC731257F891B00709835 /* StatusView.swift */,
+				68CBC7F625839DB000709835 /* Sequence.swift */,
 				68CBC6E1257E943E00709835 /* Assets.xcassets */,
 				68CBC6E6257E943E00709835 /* Main.storyboard */,
 				68CBC6E9257E943E00709835 /* Info.plist */,
@@ -331,6 +337,8 @@
 				68CBC6DD257E943C00709835 /* ContentView.swift in Sources */,
 				68CBC7A625811B3200709835 /* Task.swift in Sources */,
 				68CBC7B925815F3C00709835 /* EventMonitor.swift in Sources */,
+				68CBC7F2258391F600709835 /* Microfutures.swift in Sources */,
+				68CBC7F725839DB000709835 /* Sequence.swift in Sources */,
 				68CBC7982580F9FF00709835 /* ViewExtension.swift in Sources */,
 				68CBC747257F944C00709835 /* Integration.swift in Sources */,
 				68CBC732257F891B00709835 /* StatusView.swift in Sources */,

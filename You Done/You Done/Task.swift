@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct Task: Identifiable {
-    let id = UUID()
+struct Task: Identifiable, Equatable, Hashable {
+    var id: String = UUID().description
     var text: String
+    var deleted: Bool = false
 }

@@ -30,10 +30,3 @@ struct TaskView: View {
         }
     }
 }
-
-extension NSTextField { // << workaround !!!
-    open override var focusRingType: NSFocusRingType {
-        get { .none }
-        set { }
-    }
-}

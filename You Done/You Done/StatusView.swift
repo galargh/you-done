@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct StatusView: View {
-    @State var taskList: [Task] = [
-        Task(text: "something"),
-        Task(text: "somethign else"),
-        Task(text: "something")
-    ]
+    @EnvironmentObject var integrationStore: IntegrationStore
+    @State var taskList: [Task] = []
+    private let taskQueue = DispatchQueue(label: "serial.task.queue")
+
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
@@ -21,16 +20,33 @@ struct StatusView: View {
 
     @State private var date = Date()
     @State private var showDatePicker = false
-    @State private var prevDate: Date?
-    
-    func dateString() -> String { dateFormatter.string(from: date) }
-    
+    private var dateString: String {
+        date.toDay() == Date().toDay() ? "Today" : dateFormatter.string(from: date)
+    }
+    private func loadTaskList(force: Bool = true) {
+        if (taskList.isEmpty || force) {
+            integrationStore.all(forState: .installed).forEach { integration in
+                integration.pull(date: date).subscribe(
+                    onNext: { pulledTaskList in
+                        taskQueue.async {
+                            var newTaskList = taskList
+                            newTaskList.append(contentsOf: pulledTaskList)
+                            taskList = newTaskList.unique()
+                        }
+                    },
+                    onError: { error in
+                        print(error)
+                    }
+                )
+            }
+        }
+    }
 
     var body: some View {
         VStack {
             Group {
                 HStack {
-                    Text(dateString())
+                    Text(dateString)
                         .onTapGesture {
                             showDatePicker.toggle()
                         }
@@ -38,11 +54,18 @@ struct StatusView: View {
                             isPresented: $showDatePicker,
                             arrowEdge: .bottom
                         ) {
-                            DatePicker(dateString(), selection: $date, in: ...Date(), displayedComponents: .date).datePickerStyle(GraphicalDatePickerStyle())
+                            DatePicker("?", selection: Binding(
+                                get: { return self.date },
+                                set: { self.date = $0; self.taskList = []; loadTaskList() }
+                            ), in: ...Date(), displayedComponents: .date).datePickerStyle(GraphicalDatePickerStyle())
                                 .labelsHidden()
                         }
-                        
                     Spacer()
+                    Button(action: {
+                        loadTaskList(force: true)
+                    }) {
+                        Text("Pull")
+                    }
                 }
                 ScrollView {
                     VStack {
@@ -59,7 +82,7 @@ struct StatusView: View {
                 Button(action: { print("Send") }) { Text("Send") }
             }
             
-        }
+        }.onAppear { loadTaskList(force: false) }
     }
 }
 
