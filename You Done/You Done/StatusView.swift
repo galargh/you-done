@@ -73,7 +73,13 @@ struct StatusView: View {
             }
             HStack {
                 Spacer()
-                Button(action: { print("Copy") }) { Text("Copy") }
+                Button(action: {
+                    let pasteBoard = NSPasteboard.general
+                    pasteBoard.clearContents()
+                    pasteBoard.writeObjects([taskList.toString(title: dateString) as NSString])
+                }) {
+                    Text("Copy")
+                }
                 Button(action: { print("Send") }) { Text("Send") }
             }
             

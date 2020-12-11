@@ -11,7 +11,7 @@ class TaskList: ObservableObject {
     @Published var taskList: [Task] = []
         
     func append(contentsOf list: [Task]) {
-        DispatchQueue.main.sync {
+        DispatchQueue.main.async {
             var newTaskList = self.taskList
             newTaskList.append(contentsOf: list)
             self.taskList = newTaskList.unique()
@@ -19,13 +19,17 @@ class TaskList: ObservableObject {
     }
     
     func reset() {
-        DispatchQueue.main.sync {
+        DispatchQueue.main.async {
             self.taskList = []
         }
     }
     
     var isEmpty: Bool {
         taskList.isEmpty
+    }
+    
+    func toString(title: String) -> String {
+        "\(title):\n\(taskList.map { task in "- \(task.text)" }.joined(separator: "\n"))"
     }
 }
 
