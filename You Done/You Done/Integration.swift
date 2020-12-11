@@ -8,6 +8,7 @@
 import Foundation
 import OAuth2
 import SwiftyJSON
+import SwiftUI
 
 class IntegrationStore: ObservableObject {
     @Published var all: [Integration] = [
@@ -77,24 +78,57 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
         oauth2.request(forURL: url)
     }
     
-    func request(path: String, callback: @escaping ((JSON?, Error?) -> Void)) {
+    func parseData(_ response: OAuth2Response) -> (Data?, Error?) {
+        do {
+            let data = try response.responseData()
+            return (data, nil)
+        } catch let error {
+            return (nil, error)
+        }
+    }
+    
+    func parseSwiftyJSON(_ response: OAuth2Response) -> (JSON?, Error?) {
+        do {
+            let data = try response.responseData()
+            let json = try JSON(data: data)
+            return (json, nil)
+        } catch let error {
+            return (nil, error)
+        }
+    }
+    
+    func parseIdentity(_ response: OAuth2Response) -> OAuth2Response {
+        return response
+    }
+    
+    func parseJSONDecoder<T: Decodable>(_ type: T.Type) -> ((OAuth2Response) -> (T?, Error?)) {
+        return { response in
+            do {
+                let data = try response.responseData()
+                let decoder = JSONDecoder()
+                let decodedData = try decoder.decode(type, from: data)
+                return (decodedData, nil)
+            } catch let error {
+                return (nil, error)
+            }
+        }
+    }
+    
+    func request<DesiredResponse>(path: String,
+                                  parse: @escaping ((OAuth2Response) -> DesiredResponse),
+                                  callback: @escaping ((DesiredResponse) -> Void)) {
         let url = baseURL.appendingPathComponent(path)
         let req = request(forURL: url)
         
         perform(request: req) { response in
-            do {
-                let data = try response.responseData()
-                let json = try JSON(data: data)
-                DispatchQueue.main.async() {
-                    callback(json, nil)
-                }
-            }
-            catch let error {
-                DispatchQueue.main.async() {
-                    callback(nil, error)
-                }
+            DispatchQueue.main.async() {
+                callback(parse(response))
             }
         }
+    }
+    
+    func request(path: String, callback: @escaping ((OAuth2Response) -> Void)) {
+        request(path: path, parse: parseIdentity, callback: callback)
     }
 }
 
@@ -115,13 +149,20 @@ class GithubIntegration: Integration {
     }
     
     func user(callback: @escaping ((JSON?, Error?) -> Void)) {
-        request(path: "user", callback: callback) // "name", "id", "login"
-    }
-    
-    func events(callback: @escaping ((JSON?, Error?) -> Void)) {
-        request(path: "users/gfjalar/events", callback: callback) // "name", "id", "login"
+        request(path: "user", parse: parseSwiftyJSON, callback: callback) // "name", "id", "login"
     }
 
+    
+    func events(callback: @escaping (([Event]?, Error?) -> Void)) {
+        request(path: "users/gfjalar/events", parse: parseJSONDecoder([Event].self), callback: callback)
+    }
+    
+    struct Event: Codable {
+        var id: String
+        var type: String
+        var created_at: String
+        
+    }
 }
 
 class ZoomIntegration: Integration {

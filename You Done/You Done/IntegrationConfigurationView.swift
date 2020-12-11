@@ -29,12 +29,23 @@ struct IntegrationConfigurationView: View {
                     TextField("", text: $path)
                     Spacer()
                     Button(action: {
-                        integration.request(path: path) { response, error in
+                        integration.request(path: path, parse: integration.parseSwiftyJSON) { response, error in
                             print("response: \(response)")
                             print("error: \(error)")
                         }
                     }) {
                         Text("Test")
+                    }
+                }
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        (integration as! GithubIntegration).events { events, error in
+                            print("events: \(events)")
+                            print("error: \(error)")
+                        }
+                    }) {
+                        Text("Events")
                     }
                 }
                 Spacer()

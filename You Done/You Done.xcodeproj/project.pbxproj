@@ -27,6 +27,7 @@
 		68CBC7BF25820A6200709835 /* OAuth2 in Frameworks */ = {isa = PBXBuildFile; productRef = 68CBC7BE25820A6200709835 /* OAuth2 */; };
 		68CBC7DD258278D500709835 /* IntegrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7DC258278D500709835 /* IntegrationView.swift */; };
 		68CBC7E32582D4DD00709835 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 68CBC7E22582D4DD00709835 /* SwiftyJSON */; };
+		68CBC7E82583641900709835 /* Composition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7E72583641900709835 /* Composition.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		68CBC7B825815F3C00709835 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
 		68CBC7C8258212DC00709835 /* oauth2.secret.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = oauth2.secret.xcconfig; sourceTree = "<group>"; };
 		68CBC7DC258278D500709835 /* IntegrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationView.swift; sourceTree = "<group>"; };
+		68CBC7E72583641900709835 /* Composition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Composition.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 				68CBC7DC258278D500709835 /* IntegrationView.swift */,
 				68CBC763257FAFFA00709835 /* IntegrationConfigurationView.swift */,
 				68CBC7AA25812FB600709835 /* TaskView.swift */,
+				68CBC7E72583641900709835 /* Composition.swift */,
 				68CBC731257F891B00709835 /* StatusView.swift */,
 				68CBC6E1257E943E00709835 /* Assets.xcassets */,
 				68CBC6E6257E943E00709835 /* Main.storyboard */,
@@ -328,6 +331,7 @@
 				68CBC747257F944C00709835 /* Integration.swift in Sources */,
 				68CBC732257F891B00709835 /* StatusView.swift in Sources */,
 				68CBC710257F774600709835 /* NSImageExtension.swift in Sources */,
+				68CBC7E82583641900709835 /* Composition.swift in Sources */,
 				68CBC6DB257E943C00709835 /* AppDelegate.swift in Sources */,
 				68CBC7DD258278D500709835 /* IntegrationView.swift in Sources */,
 				68CBC72A257F88F800709835 /* IntegrationListView.swift in Sources */,
