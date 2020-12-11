@@ -8,25 +8,27 @@
 import SwiftUI
 
 struct TaskView: View {
-    @State var text: String
+    @ObservedObject var task: Task
     @State var isEditing = false
     
     var body: some View {
-        HStack {
-            TextField(
-                "",
-                text: Binding(
-                    get: { return self.text },
-                    set: { self.text = $0 }
-                ),
-                onEditingChanged: { isEditing = $0 },
-                onCommit: {
-                    print("commit")
-                }
-            )
-            Spacer()
-            Button(action: { print("Save") }) { Text("Save") }.disabled(!isEditing)
-            Button(action: { print("Delete") }) { Text("Delete") }
+        if (!task.deleted) {
+            HStack {
+                TextField(
+                    "",
+                    text: Binding(
+                        get: { return self.task.text },
+                        set: { self.task.text = $0 }
+                    ),
+                    onEditingChanged: { isEditing = $0 },
+                    onCommit: {
+                        print("commit")
+                    }
+                )
+                Spacer()
+                Button(action: { print("Save") }) { Text("Save") }.disabled(!isEditing)
+                Button(action: { self.task.deleted = true; print(self.task.deleted) }) { Text("Delete") }
+            }
         }
     }
 }

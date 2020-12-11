@@ -9,8 +9,7 @@ import SwiftUI
 
 struct StatusView: View {
     @EnvironmentObject var integrationStore: IntegrationStore
-    @State var taskList: [Task] = []
-    private let taskQueue = DispatchQueue(label: "serial.task.queue")
+    @ObservedObject var taskList: TaskList = TaskList()
 
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -28,11 +27,7 @@ struct StatusView: View {
             integrationStore.all(forState: .installed).forEach { integration in
                 integration.pull(date: date).subscribe(
                     onNext: { pulledTaskList in
-                        taskQueue.async {
-                            var newTaskList = taskList
-                            newTaskList.append(contentsOf: pulledTaskList)
-                            taskList = newTaskList.unique()
-                        }
+                        taskList.append(contentsOf: pulledTaskList)
                     },
                     onError: { error in
                         print(error)
@@ -56,7 +51,7 @@ struct StatusView: View {
                         ) {
                             DatePicker("?", selection: Binding(
                                 get: { return self.date },
-                                set: { self.date = $0; self.taskList = []; loadTaskList() }
+                                set: { self.date = $0; self.taskList.reset(); loadTaskList() }
                             ), in: ...Date(), displayedComponents: .date).datePickerStyle(GraphicalDatePickerStyle())
                                 .labelsHidden()
                         }
@@ -69,8 +64,8 @@ struct StatusView: View {
                 }
                 ScrollView {
                     VStack {
-                        ForEach(taskList) { task in
-                            TaskView(text: task.text)
+                        ForEach(self.taskList.taskList) { task in
+                            TaskView(task: task)
                         }
                     }
                 }
