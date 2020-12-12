@@ -14,6 +14,8 @@ struct ContentView: View {
     @State var tab: String = "status"
     @State var configure: Bool = false
     
+    private var taskList = TaskList()
+    
     var body: some View {
         ZStack {
             VStack {
@@ -52,7 +54,7 @@ struct ContentView: View {
                 }
                 ZStack {
                     if (tab == "status") {
-                        StatusView().padding()
+                        StatusView(taskList: taskList).padding()
                     } else if (tab == "integrations") {
                         IntegrationListView(integrationName: $integrationName).padding()
                     }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct StatusView: View {
     @EnvironmentObject var integrationStore: IntegrationStore
-    @ObservedObject var taskList: TaskList = TaskList()
+    @ObservedObject var taskList: TaskList
 
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -107,11 +107,5 @@ struct StatusView: View {
             }
             
         }.onAppear { loadTaskList(force: false) }
-    }
-}
-
-struct StatusView_Previews: PreviewProvider {
-    static var previews: some View {
-        StatusView()
     }
 }
