@@ -14,7 +14,8 @@ class IntegrationStore: ObservableObject {
     @Published var all: [Integration] = [
         GithubIntegration(),
         SlackIntegration(),
-        GoogleCalendarIntegration()
+        GoogleCalendarIntegration(),
+        ZoomIntegration()
     ]
     
     func all(forState state: Integration.State) -> [Integration] {
@@ -219,6 +220,7 @@ class SlackIntegration: Integration {
                    authorizeURI: "https://slack.com/oauth/v2/authorize",
                    tokenURI: "https://slack.com/api/oauth.v2.access",
                    secretInBody: true)
+        self.isAvailable = true
     }
 }
 

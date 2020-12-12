@@ -13,7 +13,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var popover: NSPopover!
     var statusItem: NSStatusItem!
-    var eventMonitor: EventMonitor!
+    var localEventMonitor: LocalEventMonitor!
+    var globalEventMonitor: GlobalEventMonitor!
     var integrationStore: IntegrationStore!
     var colourScheme: ColourScheme!
 
@@ -28,8 +29,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Create the popover and set the content view.
         popover = NSPopover()
-        popover.contentSize = NSSize(width: 400, height: 300)
-        popover.behavior = .transient
+        popover.contentSize = NSSize(width: 600, height: 600)
+        //popover.behavior = .transient
         popover.contentViewController = NSHostingController(rootView: contentView.environmentObject(integrationStore).environmentObject(colourScheme))
 
         // Create the status item
@@ -39,7 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             button.action = #selector(togglePopover(_:))
         }
         
-        eventMonitor = EventMonitor(
+        localEventMonitor = LocalEventMonitor(
             mask: [.leftMouseDown, .rightMouseDown],
             handler: { e in
                 //NSApp.keyWindow?.makeFirstResponder(nil)
@@ -47,7 +48,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 return e
             }
         )
-        eventMonitor.start()
+        globalEventMonitor = GlobalEventMonitor(
+            mask: [.leftMouseDown, .rightMouseDown],
+            handler: { e in
+                self.popover.close()
+                self.globalEventMonitor.stop()
+            }
+        )
  
         
         NSAppleEventManager.shared().setEventHandler(
@@ -62,9 +69,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let button = statusItem.button {
             if popover.isShown {
                 popover.performClose(sender)
+                globalEventMonitor.stop()
+                localEventMonitor.stop()
             } else {
                 popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
                 popover.contentViewController?.view.window?.becomeKey()
+                globalEventMonitor.start()
+                localEventMonitor.start()
             }
         }
     }

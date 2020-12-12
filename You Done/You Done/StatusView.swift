@@ -25,6 +25,7 @@ struct StatusView: View {
     
     @State private var isPulling = 0
     private func loadTaskList(force: Bool = true) {
+        print("load")
         if (taskList.isEmpty || force) {
             integrationStore.all(forState: .installed).forEach { integration in
                 isPulling += 1
@@ -72,10 +73,14 @@ struct StatusView: View {
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                     }.buttonStyle(PlainButtonStyle()).disabled(isPulling != 0).padding(.leading, Constants.BigButtonLeadingPadding)
                 }
-                ScrollView(showsIndicators: false) {
-                    VStack {
-                        ForEach(self.taskList.taskList) { task in
-                            TaskView(task: task)
+                if (self.taskList.taskList.isEmpty) {
+                    Image("Unicorn").resizable().aspectRatio(contentMode: .fit)
+                } else {
+                    ScrollView(showsIndicators: false) {
+                        VStack {
+                            ForEach(self.taskList.taskList) { task in
+                                TaskView(task: task)
+                            }
                         }
                     }
                 }

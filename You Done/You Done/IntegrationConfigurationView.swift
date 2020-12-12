@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct IntegrationConfigurationView: View {
+    @EnvironmentObject var colourScheme: ColourScheme
     @Binding var integrationName: String?
     @State var path: String = ""
     var integration: Integration
@@ -15,38 +16,49 @@ struct IntegrationConfigurationView: View {
     var body: some View {
         VStack {
             HStack {
-                Button(action: { integrationName = nil }) {
-                    Text("Go back")
-                }
-                Spacer()
-            }
-            HStack {
-                Text(integration.name)
+                Text(integration.name).bold()
                 Spacer()
             }
             VStack {
                 HStack {
-                    TextField("", text: $path)
+                    Button(action: { print("tap") }, label: {
+                        Image("Check Mark Colour")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                    } ).buttonStyle(PlainButtonStyle())
+                    Text("Opened Pull Requests")
                     Spacer()
-                    Button(action: {
-                        integration.request(path: path).subscribe(
-                            onNext: { response in print(response) },
-                            onError: { error in print(error) }
-                        )
-                    }) {
-                        Text("Test")
-                    }
                 }
                 HStack {
+                    Button(action: { print("tap") }, label: {
+                        Image("Check Mark Colour")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                    } ).buttonStyle(PlainButtonStyle())
+                    Text("Closed Pull Requests")
                     Spacer()
-                    Button(action: {
-                        (integration as! GithubIntegration).events().subscribe(
-                            onNext: { response in print(response) },
-                            onError: { error in print(error) }
-                        )
-                    }) {
-                        Text("Events")
-                    }
+                }
+                HStack {
+                    Button(action: { print("tap") }, label: {
+                        Image("Check Mark Colour")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                    } ).buttonStyle(PlainButtonStyle())
+                    Text("Pull Request Reviews")
+                    Spacer()
+                }
+                HStack {
+                    Button(action: { print("tap") }, label: {
+                        Image("Cancel Colour")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                    } ).buttonStyle(PlainButtonStyle())
+                    Text("Commit Pushes")
+                    Spacer()
                 }
                 Spacer()
                 HStack {
@@ -58,10 +70,9 @@ struct IntegrationConfigurationView: View {
                     }) {
                         Text("Uninstall")
                     }
-                }
+                }.visibility(hidden: .constant(true))
             }
         }
-        .frame(minWidth: 400, maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.black)
+        .frame(maxWidth: .infinity, maxHeight: .infinity).background(colourScheme.bodyBackground).padding()
     }
 }
