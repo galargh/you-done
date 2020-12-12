@@ -17,9 +17,13 @@ struct IntegrationView: View {
         HStack {
             Text(integration.name)
             Spacer()
-            Text(integration.state.rawValue)
             if (integration.state == .installed) {
-                Button(action: { integrationName = integration.name }, label: { Text("Configure") } )
+                Button(action: { integrationName = integration.name }, label: {
+                    Image("Gears Colour")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                } ).buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
             } else if (integration.state == .available) {
                 Button(action: {
                     integration.oauth2.authorize {
@@ -34,7 +38,14 @@ struct IntegrationView: View {
                                 print("Authorization was canceled or went wrong: \(error)")   // error will not be nil
                             }
                     }
-                }, label: { Text("Install") } ).disabled(integration.oauth2.isAuthorizing)
+                }, label: {
+                    Image(integration.oauth2.isAuthorizing ? "Download" : "Download Colour")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                } ).disabled(integration.oauth2.isAuthorizing).buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
+            } else {
+                Button(action: {}) {}.visibility(hidden: .constant(true))
             }
         }.onReceive(publisher) { notification in
             if let url = notification.object as? URL {

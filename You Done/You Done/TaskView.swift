@@ -24,10 +24,21 @@ struct TaskView: View {
                     onCommit: {
                         print("commit")
                     }
-                )
+                ).textFieldStyle(PlainTextFieldStyle())
                 Spacer()
-                Button(action: { print("Save") }) { Text("Save") }.disabled(!isEditing)
-                Button(action: { self.task.deleted = true; print(self.task.deleted) }) { Text("Delete") }
+                Button(action: { print("Save") }) {
+                    Image(isEditing ? "Floppy Colour" : "Floppy")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                    
+                }.buttonStyle(PlainButtonStyle()).disabled(!isEditing).padding(.leading, Constants.ButtonLeadingPadding)
+                Button(action: { self.task.deleted = true }) {
+                    Image("Dump Colour")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
             }
         }
     }

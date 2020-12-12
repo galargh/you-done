@@ -13,7 +13,8 @@ import SwiftUI
 class IntegrationStore: ObservableObject {
     @Published var all: [Integration] = [
         GithubIntegration(),
-        SlackIntegration()
+        SlackIntegration(),
+        GoogleCalendarIntegration()
     ]
     
     func all(forState state: Integration.State) -> [Integration] {
@@ -228,5 +229,15 @@ class GoogleCalendarIntegration: Integration {
                    authorizeURI: "https://accounts.google.com/o/oauth2/auth",
                    tokenURI: "https://www.googleapis.com/oauth2/v3/token",
                    scopeList: ["profile"])
+        self.isInstalled = true
+    }
+    
+    override func pull(date: Date = Date()) -> Future<[Task]> {
+        return Future { completion in
+            let tasks = ["Organized Hackathon Celebration", "Participated in DPT Standup"].map { text in
+                return Task(id: text, text: text)
+            }
+            completion(.success(tasks))
+        }
     }
 }

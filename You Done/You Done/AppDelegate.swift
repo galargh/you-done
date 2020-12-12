@@ -15,6 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem!
     var eventMonitor: EventMonitor!
     var integrationStore: IntegrationStore!
+    var colourScheme: ColourScheme!
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -23,17 +24,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let contentView = ContentView().environment(\.managedObjectContext, persistentContainer.viewContext)
 
         integrationStore = IntegrationStore()
+        colourScheme = ColourScheme()
         
         // Create the popover and set the content view.
         popover = NSPopover()
         popover.contentSize = NSSize(width: 400, height: 300)
         popover.behavior = .transient
-        popover.contentViewController = NSHostingController(rootView: contentView.environmentObject(integrationStore))
+        popover.contentViewController = NSHostingController(rootView: contentView.environmentObject(integrationStore).environmentObject(colourScheme))
 
         // Create the status item
         statusItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
         if let button = statusItem.button {
-            button.image = NSImage(named: "Cupcake")?.resize(toSize: NSSize(width: 16, height: 16))
+            button.image = NSImage(named: "Cupcake White")?.resize(toSize: NSSize(width: 16, height: 16))
             button.action = #selector(togglePopover(_:))
         }
         

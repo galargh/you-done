@@ -22,15 +22,20 @@ struct StatusView: View {
     private var dateString: String {
         date.toDay() == Date().toDay() ? "Today" : dateFormatter.string(from: date)
     }
+    
+    @State private var isPulling = 0
     private func loadTaskList(force: Bool = true) {
         if (taskList.isEmpty || force) {
             integrationStore.all(forState: .installed).forEach { integration in
+                isPulling += 1
                 integration.pull(date: date).subscribe(
                     onNext: { pulledTaskList in
                         taskList.append(contentsOf: pulledTaskList)
+                        isPulling -= 1
                     },
                     onError: { error in
                         print(error)
+                        isPulling -= 1
                     }
                 )
             }
@@ -42,6 +47,8 @@ struct StatusView: View {
             Group {
                 HStack {
                     Text(dateString)
+                        .bold()
+                        .font(.system(size: 24.0))
                         .onTapGesture {
                             showDatePicker.toggle()
                         }
@@ -59,10 +66,13 @@ struct StatusView: View {
                     Button(action: {
                         loadTaskList(force: true)
                     }) {
-                        Text("Pull")
-                    }
+                        Image(isPulling == 0 ? "Sync Colour" : "Sync")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                    }.buttonStyle(PlainButtonStyle()).disabled(isPulling != 0).padding(.leading, Constants.BigButtonLeadingPadding)
                 }
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack {
                         ForEach(self.taskList.taskList) { task in
                             TaskView(task: task)
@@ -78,9 +88,17 @@ struct StatusView: View {
                     pasteBoard.clearContents()
                     pasteBoard.writeObjects([taskList.toString(title: dateString) as NSString])
                 }) {
-                    Text("Copy")
-                }
-                Button(action: { print("Send") }) { Text("Send") }
+                    Image("File Colour")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
+                Button(action: { print("Send") }) {
+                    Image("Send Colour")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
             }
             
         }.onAppear { loadTaskList(force: false) }

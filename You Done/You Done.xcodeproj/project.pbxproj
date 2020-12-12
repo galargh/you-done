@@ -31,6 +31,9 @@
 		68CBC7ED258381DF00709835 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7EC258381DF00709835 /* Date.swift */; };
 		68CBC7F2258391F600709835 /* Microfutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7F1258391F600709835 /* Microfutures.swift */; };
 		68CBC7F725839DB000709835 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7F625839DB000709835 /* Sequence.swift */; };
+		68CBC7FC2585278300709835 /* NSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7FB2585278300709835 /* NSTextField.swift */; };
+		68CBC8012585394500709835 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC8002585394500709835 /* Constants.swift */; };
+		68CBC80E2585465400709835 /* TextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC80D2585465400709835 /* TextExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +84,9 @@
 		68CBC7EC258381DF00709835 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		68CBC7F1258391F600709835 /* Microfutures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Microfutures.swift; sourceTree = "<group>"; };
 		68CBC7F625839DB000709835 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
+		68CBC7FB2585278300709835 /* NSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTextField.swift; sourceTree = "<group>"; };
+		68CBC8002585394500709835 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		68CBC80D2585465400709835 /* TextExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +145,8 @@
 				68CBC729257F88F800709835 /* IntegrationListView.swift */,
 				68CBC7B825815F3C00709835 /* EventMonitor.swift */,
 				68CBC746257F944C00709835 /* Integration.swift */,
+				68CBC8002585394500709835 /* Constants.swift */,
+				68CBC7FB2585278300709835 /* NSTextField.swift */,
 				68CBC7F1258391F600709835 /* Microfutures.swift */,
 				68CBC7EC258381DF00709835 /* Date.swift */,
 				68CBC7DC258278D500709835 /* IntegrationView.swift */,
@@ -156,6 +164,7 @@
 				68CBC6E3257E943E00709835 /* Preview Content */,
 				68CBC70F257F774600709835 /* NSImageExtension.swift */,
 				68CBC7A525811B3200709835 /* Task.swift */,
+				68CBC80D2585465400709835 /* TextExtension.swift */,
 			);
 			path = "You Done";
 			sourceTree = "<group>";
@@ -333,15 +342,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				68CBC6E0257E943C00709835 /* You_Done.xcdatamodeld in Sources */,
+				68CBC8012585394500709835 /* Constants.swift in Sources */,
 				68CBC7ED258381DF00709835 /* Date.swift in Sources */,
 				68CBC6DD257E943C00709835 /* ContentView.swift in Sources */,
 				68CBC7A625811B3200709835 /* Task.swift in Sources */,
 				68CBC7B925815F3C00709835 /* EventMonitor.swift in Sources */,
 				68CBC7F2258391F600709835 /* Microfutures.swift in Sources */,
+				68CBC7FC2585278300709835 /* NSTextField.swift in Sources */,
 				68CBC7F725839DB000709835 /* Sequence.swift in Sources */,
 				68CBC7982580F9FF00709835 /* ViewExtension.swift in Sources */,
 				68CBC747257F944C00709835 /* Integration.swift in Sources */,
 				68CBC732257F891B00709835 /* StatusView.swift in Sources */,
+				68CBC80E2585465400709835 /* TextExtension.swift in Sources */,
 				68CBC710257F774600709835 /* NSImageExtension.swift in Sources */,
 				68CBC7E82583641900709835 /* Composition.swift in Sources */,
 				68CBC6DB257E943C00709835 /* AppDelegate.swift in Sources */,

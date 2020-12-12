@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "009-cake.svg",
+      "filename" : "021-cupcake.svg",
       "idiom" : "mac"
     }
   ],
@@ -10,6 +10,6 @@
     "version" : 1
   },
   "properties" : {
-    "template-rendering-intent" : "original"
+    "template-rendering-intent" : "template"
   }
 }
