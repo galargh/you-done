@@ -21,43 +21,46 @@ struct IntegrationConfigurationView: View {
             }
             VStack {
                 HStack {
+                    Text("Opened Pull Requests").frame(minWidth: 150, alignment: .leading)
                     Button(action: { print("tap") }, label: {
                         Image("Check Mark Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                     } ).buttonStyle(PlainButtonStyle())
-                    Text("Opened Pull Requests")
                     Spacer()
                 }
+                
                 HStack {
+                    Text("Closed Pull Requests").frame(minWidth: 150, alignment: .leading)
                     Button(action: { print("tap") }, label: {
                         Image("Check Mark Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                     } ).buttonStyle(PlainButtonStyle())
-                    Text("Closed Pull Requests")
                     Spacer()
                 }
+                
                 HStack {
+                    Text("Pull Request Reviews").frame(minWidth: 150, alignment: .leading)
                     Button(action: { print("tap") }, label: {
                         Image("Check Mark Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                     } ).buttonStyle(PlainButtonStyle())
-                    Text("Pull Request Reviews")
                     Spacer()
                 }
+                
                 HStack {
+                    Text("Commit Pushes").frame(minWidth: 150, alignment: .leading)
                     Button(action: { print("tap") }, label: {
-                        Image("Cancel Colour")
+                        Image("Check Mark Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                     } ).buttonStyle(PlainButtonStyle())
-                    Text("Commit Pushes")
                     Spacer()
                 }
                 Spacer()
@@ -71,7 +74,7 @@ struct IntegrationConfigurationView: View {
                         Text("Uninstall")
                     }
                 }.visibility(hidden: .constant(true))
-            }
+            }.padding(.leading)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity).background(colourScheme.bodyBackground).padding()
     }

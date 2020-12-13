@@ -99,11 +99,11 @@ struct StatusView: View {
                         .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                 }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
                 Button(action: { print("Send") }) {
-                    Image("Send Colour")
+                    Image("Send")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
+                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(true)
             }
             
         }.onAppear { loadTaskList(force: false) }

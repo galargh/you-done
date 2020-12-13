@@ -63,43 +63,7 @@ struct ContentView: View {
                             .visibility(hidden: .constant(integration.name != integrationName))
                             .onReceive(integration.$isInstalled, perform: { _ in integrationStore.objectWillChange.send() })
                     }
-                    ZStack {
-                        VStack(alignment: .leading) {
-                            Picker(selection: Binding(
-                                get: { return self.colourScheme.headerBackground },
-                                set: { self.colourScheme.headerBackground = $0 }
-                            ), label: Text("Header Background").frame(minWidth: 150, alignment: .leading)) {
-                                ForEach(Constants.Colours, id: \.self.description) { colour in
-                                    Rectangle().fill(colour).tag(colour)
-                                }
-                            }//.pickerStyle(SegmentedPickerStyle())
-                            Picker(selection: Binding(
-                                get: { return self.colourScheme.headerText },
-                                set: { self.colourScheme.headerText = $0 }
-                            ), label: Text("Header Text").frame(minWidth: 150, alignment: .leading)) {
-                                ForEach(Constants.Colours, id: \.self.description) { colour in
-                                    Rectangle().fill(colour).tag(colour)
-                                }
-                            }//.pickerStyle(SegmentedPickerStyle())
-                            Picker(selection: Binding(
-                                get: { return self.colourScheme.bodyBackground },
-                                set: { self.colourScheme.bodyBackground = $0 }
-                            ), label: Text("Body Background").frame(minWidth: 150, alignment: .leading)) {
-                                ForEach(Constants.Colours, id: \.self.description) { colour in
-                                    Rectangle().fill(colour).tag(colour)
-                                }
-                            }//.pickerStyle(SegmentedPickerStyle())
-                            Picker(selection: Binding(
-                                get: { return self.colourScheme.bodyText },
-                                set: { self.colourScheme.bodyText = $0 }
-                            ), label: Text("Body Text").frame(minWidth: 150, alignment: .leading)) {
-                                ForEach(Constants.Colours, id: \.self.description) { colour in
-                                    Rectangle().fill(colour).tag(colour)
-                                }
-                            }//.pickerStyle(SegmentedPickerStyle())
-                            Spacer()
-                        }.frame(maxWidth: .infinity, maxHeight: .infinity).background(colourScheme.bodyBackground).padding()
-                    }.visibility(hidden: .constant(!configure))
+                    ConfigurationView().visibility(hidden: .constant(!configure))
                 }.background(colourScheme.bodyBackground).foregroundColor(colourScheme.bodyText)
             }
         }.background(colourScheme.headerBackground).foregroundColor(colourScheme.headerText)

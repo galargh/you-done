@@ -34,6 +34,7 @@
 		68CBC7FC2585278300709835 /* NSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7FB2585278300709835 /* NSTextField.swift */; };
 		68CBC8012585394500709835 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC8002585394500709835 /* Constants.swift */; };
 		68CBC80E2585465400709835 /* TextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC80D2585465400709835 /* TextExtension.swift */; };
+		68CBC81325858DDE00709835 /* ConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC81225858DDD00709835 /* ConfigurationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,7 @@
 		68CBC7FB2585278300709835 /* NSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTextField.swift; sourceTree = "<group>"; };
 		68CBC8002585394500709835 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		68CBC80D2585465400709835 /* TextExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextExtension.swift; sourceTree = "<group>"; };
+		68CBC81225858DDD00709835 /* ConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +144,7 @@
 			children = (
 				68CBC6DA257E943C00709835 /* AppDelegate.swift */,
 				68CBC6DC257E943C00709835 /* ContentView.swift */,
+				68CBC81225858DDD00709835 /* ConfigurationView.swift */,
 				68CBC729257F88F800709835 /* IntegrationListView.swift */,
 				68CBC7B825815F3C00709835 /* EventMonitor.swift */,
 				68CBC746257F944C00709835 /* Integration.swift */,
@@ -342,6 +345,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				68CBC6E0257E943C00709835 /* You_Done.xcdatamodeld in Sources */,
+				68CBC81325858DDE00709835 /* ConfigurationView.swift in Sources */,
 				68CBC8012585394500709835 /* Constants.swift in Sources */,
 				68CBC7ED258381DF00709835 /* Date.swift in Sources */,
 				68CBC6DD257E943C00709835 /* ContentView.swift in Sources */,
