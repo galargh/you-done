@@ -25,7 +25,6 @@ struct StatusView: View {
     
     @State private var isPulling = 0
     private func loadTaskList(force: Bool = true) {
-        print("load")
         if (taskList.isEmpty || force) {
             integrationStore.all(forState: .installed).forEach { integration in
                 isPulling += 1
@@ -71,7 +70,7 @@ struct StatusView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                    }.buttonStyle(PlainButtonStyle()).disabled(isPulling != 0).padding(.leading, Constants.BigButtonLeadingPadding)
+                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling != 0)
                 }
                 if (self.taskList.taskList.isEmpty) {
                     Image("Unicorn").resizable().aspectRatio(contentMode: .fit)
@@ -93,11 +92,11 @@ struct StatusView: View {
                     pasteBoard.clearContents()
                     pasteBoard.writeObjects([taskList.toString(title: dateString) as NSString])
                 }) {
-                    Image("File Colour")
+                    Image(self.taskList.taskList.isEmpty ? "File" : "File Colour")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
+                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(self.taskList.taskList.isEmpty)
                 Button(action: { print("Send") }) {
                     Image("Send")
                         .resizable()

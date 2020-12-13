@@ -242,7 +242,11 @@ class GoogleCalendarIntegration: Integration {
             do {
                 sleep(2)
             }
-            completion(.success(tasks))
+            if (date.toDay() == Date().toDay()) {
+                completion(.success(tasks))
+            } else {
+                completion(.success([]))
+            }
         }
     }
 }
