@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ConfigurationView: View {
     @EnvironmentObject var colourScheme: ColourScheme
-    @State var backgroundPull = true
+    @State var backgroundPull = false
     
     var body: some View {
         VStack(alignment: .leading) {

@@ -15,9 +15,9 @@ class Constants {
     static let ButtonHeight: CGFloat? = 22.0
     static let ButtonLeadingPadding: CGFloat? = 4.0
     
-    static let BigButtonWidth: CGFloat? = 24.0
-    static let BigButtonHeight: CGFloat? = 24.0
-    static let BigButtonLeadingPadding: CGFloat? = 6.0
+    static let BigButtonWidth: CGFloat? = 32.0
+    static let BigButtonHeight: CGFloat? = 32.0
+    static let BigButtonLeadingPadding: CGFloat? = 12.0
     
     static let MagicMint: Color = Color(red: 161 / 255, green: 232 / 255, blue: 195 / 255)
     static let AeroBlue: Color = Color(red: 204 / 255, green: 243 / 255, blue: 226 / 255)
