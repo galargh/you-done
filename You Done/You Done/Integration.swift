@@ -236,7 +236,7 @@ class GoogleCalendarIntegration: Integration {
     
     override func pull(date: Date = Date()) -> Future<[Task]> {
         return Future { completion in
-            let tasks = ["Participated in ⚡ event", "Organized Making hackathon film event"].map { text in
+            let tasks = ["Participated in ⚡ event", "Organised Making hackathon film event"].map { text in
                 return Task(id: text, text: text)
             }
             do {
