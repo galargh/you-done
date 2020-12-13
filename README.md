@@ -22,7 +22,7 @@
 
 5. Prepare the status and send it to Slack or copy it to Clipboard.
 
-![](screenshots/you-done_status.png))
+![](screenshots/you-done_status.png)
 
 ## Attributions
 
