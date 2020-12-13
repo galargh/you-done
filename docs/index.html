@@ -7,13 +7,77 @@
         <meta name="description" content="You're done!">
         <meta name="author" content="Piotr Galar">
 
-        <title>You're done!</title>
+        <title>You done!</title>
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <style>
+          * {
+            box-sizing: border-box;
+          }
+
+          html {
+            min-height: 100%;
+            position: relative;
+          }
+
+          body {
+            height: 100%;
+            font-family: sans-serif;
+            background-color: #b1b6e1;
+            margin: 0;
+          }
+          h1, p {
+            margin: 0;
+          }
+          h1, .vote {
+            font-size: 32px;
+            font-weight: bold;
+          }
+          header {
+            background-color: #a1e8c3;
+            padding: 20px;
+            color: #3c122c;
+          }
+          a {
+            color: #3c122c;
+          }
+          container {
+            padding: 10px;
+            text-align: center;
+            font-size: 24px;
+            color: white;
+          }
+          container p {
+            padding: 10px;
+          }
+          .center {
+            width: 800px;
+            margin: auto;
+          }
+        </style>
     </head>
     <body>
-        <h1>You're done!</h1>
-        <p><img src="https://media.giphy.com/media/xl2A1ymCaeS2YD484h/giphy.gif" alt="Nicole Byer saying 'You're done!'" /></p>
+      <header>
+        <h1 class="center">
+          <img width="48px" src="images/unicorn_cupcake.svg" alt="Unicorn Cupcake Logo">
+          <span>You done!</span>
+        </h1>
+      </header>
+      <container>
+        <p class="center">
+          If you keep forgetting to send out daily status updates <a href="https://github.com/gfjalar/you-done"><b>You Done</b></a> is for you!
+        </p>
+        <p class="center">
+          Coming soon to the <b>AppStore</b> near you.
+        </p>
+        <p class="center">
+          Don't forget to <span class="vote"><b><a href="">VOTE</a></b></span> for <b>You Done</b> and...
+        </p>
+        <p class="center">
+          <img src="https://media.giphy.com/media/xl2A1ymCaeS2YD484h/giphy.gif" alt="Nicole Byer saying 'You're done!'" />
+        </p>
+      </container>
     </body>
 </html>
