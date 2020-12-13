@@ -73,12 +73,28 @@ struct StatusView: View {
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling != 0)
                 }
                 if (self.taskList.taskList.isEmpty) {
-                    Image("Unicorn").resizable().aspectRatio(contentMode: .fit)
+                    Button(action: {
+                        self.taskList.append(contentsOf: [Task(text: "New task")])
+                    }) {
+                        Image("Unicorn").resizable().aspectRatio(contentMode: .fit)
+                    }.buttonStyle(PlainButtonStyle())
                 } else {
                     ScrollView(showsIndicators: false) {
                         VStack {
                             ForEach(self.taskList.taskList) { task in
                                 TaskView(task: task)
+                            }
+                            HStack {
+                                Spacer()
+                                Button(action: {
+                                    self.taskList.append(contentsOf: [Task(text: "New task")])
+                                }) {
+                                    Image("Add Colour")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                                    
+                                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
                             }
                         }
                     }
