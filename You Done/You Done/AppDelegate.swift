@@ -87,10 +87,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     NotificationCenter.default.post(name: Integration.Notification, object: url)
                 }
                 if (!popover.isShown) {
-                    if let button = statusItem.button {
-                        popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
-                        popover.contentViewController?.view.window?.becomeKey()
-                    }
+                    togglePopover(nil)
                 }
             }
         }

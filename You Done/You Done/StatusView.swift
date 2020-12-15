@@ -121,6 +121,6 @@ struct StatusView: View {
                 }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(true)
             }
             
-        }.onAppear { /*loadTaskList(force: false)*/ }
+        }.onAppear { loadTaskList(force: false) }
     }
 }

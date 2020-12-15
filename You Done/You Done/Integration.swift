@@ -220,7 +220,6 @@ class SlackIntegration: Integration {
                    authorizeURI: "https://slack.com/oauth/v2/authorize",
                    tokenURI: "https://slack.com/api/oauth.v2.access",
                    secretInBody: true)
-        self.isAvailable = true
     }
 }
 
@@ -231,22 +230,5 @@ class GoogleCalendarIntegration: Integration {
                    authorizeURI: "https://accounts.google.com/o/oauth2/auth",
                    tokenURI: "https://www.googleapis.com/oauth2/v3/token",
                    scopeList: ["profile"])
-        self.isInstalled = true
-    }
-    
-    override func pull(date: Date = Date()) -> Future<[Task]> {
-        return Future { completion in
-            let tasks = ["Participated in ⚡ event", "Organised Making hackathon film event"].map { text in
-                return Task(id: text, text: text)
-            }
-            do {
-                sleep(2)
-            }
-            if (date.toDay() == Date().toDay()) {
-                completion(.success(tasks))
-            } else {
-                completion(.success([]))
-            }
-        }
     }
 }

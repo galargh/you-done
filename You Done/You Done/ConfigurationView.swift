@@ -71,6 +71,17 @@ struct ConfigurationView: View {
                 .padding(.leading)
             }
             Spacer()
+            HStack {
+                Spacer()
+                Button(action: {
+                    NSApp.terminate(nil)
+                }, label: {
+                    Image("Dump Colour")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                } ).buttonStyle(PlainButtonStyle())
+            }
         }.frame(maxWidth: .infinity, maxHeight: .infinity).background(colourScheme.bodyBackground).padding()
     }
 }

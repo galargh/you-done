@@ -29,7 +29,7 @@ class TaskList: ObservableObject {
     }
     
     func toString(title: String) -> String {
-        "\(title):\n\(taskList.map { task in "- \(task.text)" }.joined(separator: "\n"))"
+        "\(title):\n\(taskList.filter { task in !task.deleted }.map { task in "- \(task.text)" }.joined(separator: "\n"))"
     }
 }
 

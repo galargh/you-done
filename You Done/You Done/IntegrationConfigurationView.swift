@@ -70,10 +70,13 @@ struct IntegrationConfigurationView: View {
                         integration.oauth2.forgetTokens()
                         integration.isInstalled = false
                         integrationName = nil
-                    }) {
-                        Text("Uninstall")
-                    }
-                }.visibility(hidden: .constant(true))
+                    }, label: {
+                        Image("Dump Colour")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                    } ).buttonStyle(PlainButtonStyle())
+                }
             }.padding(.leading)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity).background(colourScheme.bodyBackground).padding()
