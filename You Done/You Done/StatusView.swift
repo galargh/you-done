@@ -23,23 +23,33 @@ struct StatusView: View {
         date.toDay() == Date().toDay() ? "Today" : dateFormatter.string(from: date)
     }
     
-    @State private var isPulling = 0
+    @State private var pullingCounter = 0
+    private var isPulling: Bool { pullingCounter != 0 }
     private func loadTaskList(force: Bool = true) {
         if (taskList.isEmpty || force) {
+            pullingCounter += 1
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                pullingCounter -= 1
+            }
             integrationStore.all(forState: .installed).forEach { integration in
-                isPulling += 1
+                pullingCounter += 1
                 integration.pull(date: date).subscribe(
                     onNext: { pulledTaskList in
                         taskList.append(contentsOf: pulledTaskList)
-                        isPulling -= 1
+                        pullingCounter -= 1
                     },
                     onError: { error in
                         print(error)
-                        isPulling -= 1
+                        pullingCounter -= 1
                     }
                 )
             }
         }
+    }
+    
+    private var foreverAnimation: Animation {
+        Animation.linear(duration: 4.0)
+            .repeatForever(autoreverses: false)
     }
 
     var body: some View {
@@ -66,11 +76,13 @@ struct StatusView: View {
                     Button(action: {
                         loadTaskList(force: true)
                     }) {
-                        Image(isPulling == 0 ? "Sync Colour" : "Sync")
+                        Image(isPulling ? "Sync" : "Sync Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
+                            .rotationEffect(Angle(degrees: isPulling ? 360 : 0.0))
+                            .animation(isPulling ? foreverAnimation : .default)
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling != 0)
+                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling)
                 }
                 if (self.taskList.taskList.isEmpty) {
                     Button(action: {
