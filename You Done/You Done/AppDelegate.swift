@@ -51,8 +51,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         globalEventMonitor = GlobalEventMonitor(
             mask: [.leftMouseDown, .rightMouseDown],
             handler: { e in
-                self.popover.close()
-                self.globalEventMonitor.stop()
+                if (!self.integrationStore.all.contains { integration in integration.oauth2.isAuthorizing }) {
+                    self.popover.close()
+                    self.globalEventMonitor.stop()
+                }
             }
         )
  

@@ -227,6 +227,8 @@ class SlackIntegration: Integration {
 }
 
 class GoogleCalendarIntegration: Integration {
+    private var email: String?
+    
     init() {
         super.init(name: "Google Calendar",
                    baseURI: "https://www.googleapis.com",
@@ -234,10 +236,158 @@ class GoogleCalendarIntegration: Integration {
                    tokenURI: "https://oauth2.googleapis.com/token",
                    scopeList: [
                     "https://www.googleapis.com/auth/calendar.readonly",
-                    "https://www.googleapis.com/auth/calendar.events.readonly"
+                    "https://www.googleapis.com/auth/userinfo.email"
                    ],
                    host: "https://www.googleapis.com",
                    redirectURIs: ["urn:ietf:wg:oauth:2.0:oob"])
         self.alsoIntercept403 = true
     }
+    
+    func user() -> Future<User> {
+        return request(path: "oauth2/v1/userinfo").map { response in
+            let data = try response.responseData()
+            let decoder = JSONDecoder()
+            return try decoder.decode(User.self, from: data)
+        }
+    }
+    
+    func calendarList() -> Future<CalendarList> {
+        /*
+        return request(path: "calendar/v3/users/me/calendarList").map { response in
+            let data = try response.responseData()
+            let decoder = JSONDecoder()
+            return try decoder.decode(CalendarList.self, from: data)
+        }
+        */
+        return Future { completion in completion(.success(CalendarList(items: [CalendarListEntry(id: "primary")]))) }
+    }
+    
+    struct CalendarList: Codable {
+        var items: [CalendarListEntry]
+    }
+    
+    struct CalendarListEntry: Codable {
+        var id: String
+    }
+    
+    func events(date: Date = Date()) -> Future<[Event]> {
+        return user().flatMap { user -> Future<CalendarList> in
+            self.email = user.email
+            return self.calendarList()
+        }.flatMap { calendarList in
+            return calendarList.items.map { calendarListEntry in
+                return self.request(path: "calendar/v3/calendars/\(calendarListEntry.id)/events").map { response -> Events in
+                    let data = try response.responseData()
+                    let decoder = JSONDecoder()
+                    print(JSON(data))
+                    return try decoder.decode(Events.self, from: data)
+                }
+            }.first!
+        }.map { events in
+            let day = date.toDay()
+            return events.items.filter { event in
+                event.toDate().toDay() == day && event.toString(email: self.email!) != nil
+            }
+        }
+    }
+    
+    override func pull(date: Date = Date()) -> Future<[Task]> {
+        return events(date: date).map { eventList in
+            return eventList.map { event in
+                let text = event.toString(email: self.email!)!
+                return Task(id: text, text: text)
+            }
+        }
+    }
+    
+    struct Events: Codable {
+        var items: [Event]
+    }
+    
+    struct Event: Codable {
+        var id: String
+        var status: String
+        var summary: String
+        var creator: User
+        var organizer: User
+        var attendees: [Attendee]?
+        var start: Start
+        
+        func toString(email: String) -> String? {
+            if creator.email == email {
+                return "Created \(summary) event"
+            } else if organizer.email == email {
+                return "Organized \(summary) event"
+            } else if (attendees?.contains { attendee in attendee.email == email && attendee.responseStatus == "accepted" } ?? false) {
+                return "Attended \(summary)"
+            } else {
+                return nil
+            }
+        }
+        
+        func toDate() -> Date {
+            start.toDate()
+        }
+    }
+    
+    struct User: Codable {
+        var email: String
+    }
+    
+    struct Attendee: Codable {
+        var email: String
+        var responseStatus: String
+    }
+    
+    struct Start: Codable {
+        var date: String?
+        var dateTime: String?
+        var timeZone: String?
+        
+        func toDate() -> Date {
+            if let string = date {
+                let dateFormatter = DateFormatter()
+                dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                return dateFormatter.date(from: string)!
+            } else {
+                return ISO8601DateFormatter().date(from: dateTime!)!
+            }
+        }
+    }
+    
+    
+    
+    func request(path: String, callback: @escaping ((OAuth2JSON?, Error?) -> Void)) {
+            let url = baseURL.appendingPathComponent(path)
+            let req = oauth2.request(forURL: url)
+            
+            perform(request: req) { response in
+                do {
+                    let dict = try response.responseJSON()
+                    var profile = [String: String]()
+                    if let name = dict["displayName"] as? String {
+                        profile["name"] = name
+                    }
+                    if let avatar = (dict["image"] as? OAuth2JSON)?["url"] as? String {
+                        profile["avatar_url"] = avatar
+                    }
+                    if let error = (dict["error"] as? OAuth2JSON)?["message"] as? String {
+                        DispatchQueue.main.async {
+                            callback(nil, OAuth2Error.generic(error))
+                        }
+                    }
+                    else {
+                        DispatchQueue.main.async {
+                            callback(profile, nil)
+                        }
+                    }
+                }
+                catch let error {
+                    DispatchQueue.main.async {
+                        callback(nil, error)
+                    }
+                }
+            }
+        }
 }
