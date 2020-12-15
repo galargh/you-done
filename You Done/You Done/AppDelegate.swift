@@ -51,9 +51,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         globalEventMonitor = GlobalEventMonitor(
             mask: [.leftMouseDown, .rightMouseDown],
             handler: { e in
-                if (!self.integrationStore.all.contains { integration in integration.oauth2.isAuthorizing }) {
-                    self.popover.close()
-                    self.globalEventMonitor.stop()
+                if (self.popover.isShown) {
+                    if (!self.integrationStore.all.contains { $0.oauth2.isAuthorizing }) {
+                        self.togglePopover(nil)
+                    }
                 }
             }
         )
@@ -70,6 +71,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func togglePopover(_ sender: AnyObject?) {
         if let button = statusItem.button {
             if popover.isShown {
+                self.integrationStore.all.filter { $0.oauth2.isAuthorizing }.forEach { $0.oauth2.abortAuthorization() }
                 popover.performClose(sender)
                 globalEventMonitor.stop()
                 localEventMonitor.stop()
