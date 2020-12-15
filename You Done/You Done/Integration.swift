@@ -41,7 +41,9 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
          authorizeURI: String,
          tokenURI: String,
          scopeList: [String] = [],
-         secretInBody: Bool = false) {
+         secretInBody: Bool = false,
+         host: String? = nil,
+         redirectURIs: [String]? = nil) {
         self.name = name
         self.baseURL = URL(string: baseURI)!
         
@@ -50,17 +52,18 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
         
         if let id = clientID, let secret = clientSecret {
             self.isAvailable = true
-            super.init(oauth2: OAuth2CodeGrant(settings: [
+            let oauth = OAuth2CodeGrant(settings: [
                 "client_id": id,
                 "client_secret": secret ,
                 "authorize_uri": authorizeURI,
                 "token_uri": tokenURI,
                 "scope": scopeList.joined(separator: " "),
-                "redirect_uris": ["youdone://oauth2/\(name)"],
+                "redirect_uris": redirectURIs ?? ["youdone://oauth2/\(name)"],
                 "secret_in_body": secretInBody,
                 "verbose": true,
                 "keychain": true
-            ]))
+            ])
+            super.init(oauth2: oauth, host: host)
         } else {
             self.isAvailable = false
             super.init(oauth2: OAuth2CodeGrant(settings: [:]))
@@ -228,7 +231,13 @@ class GoogleCalendarIntegration: Integration {
         super.init(name: "Google Calendar",
                    baseURI: "https://www.googleapis.com",
                    authorizeURI: "https://accounts.google.com/o/oauth2/auth",
-                   tokenURI: "https://www.googleapis.com/oauth2/v3/token",
-                   scopeList: ["profile"])
+                   tokenURI: "https://oauth2.googleapis.com/token",
+                   scopeList: [
+                    "https://www.googleapis.com/auth/calendar.readonly",
+                    "https://www.googleapis.com/auth/calendar.events.readonly"
+                   ],
+                   host: "https://www.googleapis.com",
+                   redirectURIs: ["urn:ietf:wg:oauth:2.0:oob"])
+        self.alsoIntercept403 = true
     }
 }

@@ -26,16 +26,16 @@ struct IntegrationView: View {
                 } ).buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
             } else if (integration.state == .available) {
                 Button(action: {
-                    integration.oauth2.authorize {
-                    //integration.oauth2.authorizeEmbedded(from: NSApp.windows[1]) { // doesn't work with .transient
+                    print(NSApp.windows)
+                    integration.oauth2.authorizeEmbedded(from: NSApp.windows[1]) {
                         authParameters, error in
                             if let params = authParameters {
                                 print("Authorized! Access token is in `oauth2.accessToken`")
-                                print(integration.oauth2.accessToken)
+                                print(integration.oauth2.accessToken!)
                                 print("Authorized! Additional parameters: \(params)")
                                 integration.isInstalled = true
                             } else {
-                                print("Authorization was canceled or went wrong: \(error)")   // error will not be nil
+                                print("Authorization was canceled or went wrong: \(String(describing: error))")
                             }
                     }
                 }, label: {

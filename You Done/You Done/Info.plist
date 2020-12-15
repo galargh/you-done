@@ -43,5 +43,9 @@
 	<string>$(GITHUB_CLIENT_ID)</string>
 	<key>GitHub Client Secret</key>
 	<string>$(GITHUB_CLIENT_SECRET)</string>
+	<key>Google Calendar Client ID</key>
+	<string>$(GOOGLE_CALENDAR_CLIENT_ID)</string>
+	<key>Google Calendar Client Secret</key>
+	<string>$(GOOGLE_CALENDAR_CLIENT_SECRET)</string>
 </dict>
 </plist>
