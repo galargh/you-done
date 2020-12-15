@@ -83,10 +83,14 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
         oauth2.request(forURL: url)
     }
 
-    func request(path: String) -> Future<OAuth2Response> {
+    func request(path: String, parameters: [String:String] = [:]) -> Future<OAuth2Response> {
         return Future { completion in
             let url = self.baseURL.appendingPathComponent(path)
-            let req = self.request(forURL: url)
+            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+            urlComponents.queryItems = parameters.map { name, value in
+                URLQueryItem(name: name, value: value)
+            }
+            let req = self.request(forURL: urlComponents.url!)
             self.perform(request: req) { response in
                 completion(.success(response))
             }
@@ -276,17 +280,23 @@ class GoogleCalendarIntegration: Integration {
             return self.calendarList()
         }.flatMap { calendarList in
             return calendarList.items.map { calendarListEntry in
-                return self.request(path: "calendar/v3/calendars/\(calendarListEntry.id)/events").map { response -> Events in
+                return self.request(
+                    path: "calendar/v3/calendars/\(calendarListEntry.id)/events",
+                    parameters: [
+                        "singleEvents": "true",
+                        "orderBy": "startTime",
+                        "timeMin": ISO8601DateFormatter().string(from: date.toDay()),
+                        "timeMax": ISO8601DateFormatter().string(from: date)
+                    ]
+                ).map { response -> Events in
                     let data = try response.responseData()
                     let decoder = JSONDecoder()
-                    print(JSON(data))
                     return try decoder.decode(Events.self, from: data)
                 }
             }.first!
         }.map { events in
-            let day = date.toDay()
             return events.items.filter { event in
-                event.toDate().toDay() == day && event.toString(email: self.email!) != nil
+                event.toString(email: self.email!) != nil
             }
         }
     }
@@ -311,7 +321,6 @@ class GoogleCalendarIntegration: Integration {
         var creator: User
         var organizer: User
         var attendees: [Attendee]?
-        var start: Start
         
         func toString(email: String) -> String? {
             if creator.email == email {
@@ -319,14 +328,10 @@ class GoogleCalendarIntegration: Integration {
             } else if organizer.email == email {
                 return "Organized \(summary) event"
             } else if (attendees?.contains { attendee in attendee.email == email && attendee.responseStatus == "accepted" } ?? false) {
-                return "Attended \(summary)"
+                return "Attended \(summary) event"
             } else {
                 return nil
             }
-        }
-        
-        func toDate() -> Date {
-            start.toDate()
         }
     }
     
@@ -338,56 +343,4 @@ class GoogleCalendarIntegration: Integration {
         var email: String
         var responseStatus: String
     }
-    
-    struct Start: Codable {
-        var date: String?
-        var dateTime: String?
-        var timeZone: String?
-        
-        func toDate() -> Date {
-            if let string = date {
-                let dateFormatter = DateFormatter()
-                dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-                dateFormatter.dateFormat = "yyyy-MM-dd"
-                return dateFormatter.date(from: string)!
-            } else {
-                return ISO8601DateFormatter().date(from: dateTime!)!
-            }
-        }
-    }
-    
-    
-    
-    func request(path: String, callback: @escaping ((OAuth2JSON?, Error?) -> Void)) {
-            let url = baseURL.appendingPathComponent(path)
-            let req = oauth2.request(forURL: url)
-            
-            perform(request: req) { response in
-                do {
-                    let dict = try response.responseJSON()
-                    var profile = [String: String]()
-                    if let name = dict["displayName"] as? String {
-                        profile["name"] = name
-                    }
-                    if let avatar = (dict["image"] as? OAuth2JSON)?["url"] as? String {
-                        profile["avatar_url"] = avatar
-                    }
-                    if let error = (dict["error"] as? OAuth2JSON)?["message"] as? String {
-                        DispatchQueue.main.async {
-                            callback(nil, OAuth2Error.generic(error))
-                        }
-                    }
-                    else {
-                        DispatchQueue.main.async {
-                            callback(profile, nil)
-                        }
-                    }
-                }
-                catch let error {
-                    DispatchQueue.main.async {
-                        callback(nil, error)
-                    }
-                }
-            }
-        }
 }
