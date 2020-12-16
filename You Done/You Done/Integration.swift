@@ -27,6 +27,7 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
     let id = UUID()
     let name: String
     let baseURL: URL
+    var StringDefaults: [String:String] = [:]
     @Published var isAvailable: Bool
     @Published var isInstalled: Bool = false
 
@@ -113,6 +114,10 @@ class GithubIntegration: Integration {
                    tokenURI: "https://github.com/login/oauth/access_token",
                    scopeList: ["user", "repo"],
                    secretInBody: true)
+        self.StringDefaults = [
+            GithubIntegration.OPENED_PULL_REQUEST_PATTERN_DEFAULT_KEY: GithubIntegration.OPENED_PULL_REQUEST_PATTERN_DEFAULT_VALUE,
+            GithubIntegration.OPENED_PULL_REQUEST_TEMPLATE_DEFAULT_KEY: GithubIntegration.OPENED_PULL_REQUEST_TEMPLATE_DEFAULT_VALUE
+        ]
     }
     
     override func request(forURL url: URL) -> URLRequest {
@@ -190,7 +195,12 @@ class GithubIntegration: Integration {
         
         func toString() -> String? {
             switch type {
-            case "PullRequestEvent" where ["opened", "closed", "reopened"].contains(payload.action):
+            case "PullRequestEvent" where payload.action == "opened":
+                return payload.pull_request!.title.firstMatch(
+                    of: UserDefaults.standard.string(forKey: GithubIntegration.OPENED_PULL_REQUEST_PATTERN_DEFAULT_KEY) ?? GithubIntegration.OPENED_PULL_REQUEST_PATTERN_DEFAULT_VALUE,
+                    as: UserDefaults.standard.string(forKey: GithubIntegration.OPENED_PULL_REQUEST_TEMPLATE_DEFAULT_KEY) ?? GithubIntegration.OPENED_PULL_REQUEST_TEMPLATE_DEFAULT_VALUE
+                )
+            case "PullRequestEvent" where ["closed", "reopened"].contains(payload.action):
                 return "\(payload.action!.capitalized) \(payload.pull_request!.title)"
             case "PullRequestReviewEvent" where ["created"].contains(payload.action):
                 return "\(payload.review!.state.capitalized) \(payload.pull_request!.title)"
@@ -205,6 +215,11 @@ class GithubIntegration: Integration {
             return ISO8601DateFormatter().date(from: created_at)!
         }
     }
+    
+    static let OPENED_PULL_REQUEST_PATTERN_DEFAULT_KEY: String = "Opened Pull Request Pattern"
+    static let OPENED_PULL_REQUEST_PATTERN_DEFAULT_VALUE: String = "(.*)"
+    static let OPENED_PULL_REQUEST_TEMPLATE_DEFAULT_KEY: String = "Opened Pull Request Template"
+    static let OPENED_PULL_REQUEST_TEMPLATE_DEFAULT_VALUE: String = "Opened PR: $1"
 }
 
 class ZoomIntegration: Integration {

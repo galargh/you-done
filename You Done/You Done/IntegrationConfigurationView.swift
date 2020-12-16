@@ -11,7 +11,7 @@ struct IntegrationConfigurationView: View {
     @EnvironmentObject var colourScheme: ColourScheme
     @Binding var integrationName: String?
     @State var path: String = ""
-    var integration: Integration
+    @ObservedObject var integration: Integration
     
     var body: some View {
         VStack {
@@ -20,48 +20,8 @@ struct IntegrationConfigurationView: View {
                 Spacer()
             }
             VStack {
-                HStack {
-                    Text("Opened Pull Requests").frame(minWidth: 150, alignment: .leading)
-                    Button(action: { print("tap") }, label: {
-                        Image("Check Mark Colour")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
-                    } ).buttonStyle(PlainButtonStyle())
-                    Spacer()
-                }
-                
-                HStack {
-                    Text("Closed Pull Requests").frame(minWidth: 150, alignment: .leading)
-                    Button(action: { print("tap") }, label: {
-                        Image("Check Mark Colour")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
-                    } ).buttonStyle(PlainButtonStyle())
-                    Spacer()
-                }
-                
-                HStack {
-                    Text("Pull Request Reviews").frame(minWidth: 150, alignment: .leading)
-                    Button(action: { print("tap") }, label: {
-                        Image("Check Mark Colour")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
-                    } ).buttonStyle(PlainButtonStyle())
-                    Spacer()
-                }
-                
-                HStack {
-                    Text("Commit Pushes").frame(minWidth: 150, alignment: .leading)
-                    Button(action: { print("tap") }, label: {
-                        Image("Check Mark Colour")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
-                    } ).buttonStyle(PlainButtonStyle())
-                    Spacer()
+                ForEach(Array(integration.StringDefaults.keys), id: \.self) { key in
+                    StringDefaultView(key: key, value: UserDefaults.standard.string(forKey: key) ?? integration.StringDefaults[key]!)
                 }
                 Spacer()
                 HStack {

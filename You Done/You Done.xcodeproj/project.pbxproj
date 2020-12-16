@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		68C3745A258A0A5A00F5C5E0 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C37459258A0A5A00F5C5E0 /* StringExtension.swift */; };
+		68C3745F258A2E5900F5C5E0 /* StringDefaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C3745E258A2E5900F5C5E0 /* StringDefaultView.swift */; };
 		68CBC6DB257E943C00709835 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DA257E943C00709835 /* AppDelegate.swift */; };
 		68CBC6DD257E943C00709835 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DC257E943C00709835 /* ContentView.swift */; };
 		68CBC6E0257E943C00709835 /* You_Done.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DE257E943C00709835 /* You_Done.xcdatamodeld */; };
@@ -57,6 +58,7 @@
 
 /* Begin PBXFileReference section */
 		68C37459258A0A5A00F5C5E0 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		68C3745E258A2E5900F5C5E0 /* StringDefaultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringDefaultView.swift; sourceTree = "<group>"; };
 		68CBC6D7257E943C00709835 /* You Done.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "You Done.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		68CBC6DA257E943C00709835 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		68CBC6DC257E943C00709835 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				68C37459258A0A5A00F5C5E0 /* StringExtension.swift */,
 				68CBC8002585394500709835 /* Constants.swift */,
 				68CBC7FB2585278300709835 /* NSTextField.swift */,
+				68C3745E258A2E5900F5C5E0 /* StringDefaultView.swift */,
 				68CBC7F1258391F600709835 /* Microfutures.swift */,
 				68CBC7EC258381DF00709835 /* Date.swift */,
 				68CBC7DC258278D500709835 /* IntegrationView.swift */,
@@ -362,6 +365,7 @@
 				68CBC732257F891B00709835 /* StatusView.swift in Sources */,
 				68CBC80E2585465400709835 /* TextExtension.swift in Sources */,
 				68CBC710257F774600709835 /* NSImageExtension.swift in Sources */,
+				68C3745F258A2E5900F5C5E0 /* StringDefaultView.swift in Sources */,
 				68CBC7E82583641900709835 /* Composition.swift in Sources */,
 				68CBC6DB257E943C00709835 /* AppDelegate.swift in Sources */,
 				68CBC7DD258278D500709835 /* IntegrationView.swift in Sources */,
