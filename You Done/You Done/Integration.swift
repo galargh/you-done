@@ -68,7 +68,7 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
             self.isAvailable = false
             super.init(oauth2: OAuth2CodeGrant(settings: [:]))
         }
-        self.isInstalled = oauth2.clientConfig.accessToken != nil
+        self.isInstalled = oauth2.clientConfig.accessToken != nil || oauth2.clientConfig.refreshToken != nil
     }
     
     enum State: String, CaseIterable {
