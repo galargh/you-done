@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		68C3745A258A0A5A00F5C5E0 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C37459258A0A5A00F5C5E0 /* StringExtension.swift */; };
 		68CBC6DB257E943C00709835 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DA257E943C00709835 /* AppDelegate.swift */; };
 		68CBC6DD257E943C00709835 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DC257E943C00709835 /* ContentView.swift */; };
 		68CBC6E0257E943C00709835 /* You_Done.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DE257E943C00709835 /* You_Done.xcdatamodeld */; };
@@ -55,6 +56,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		68C37459258A0A5A00F5C5E0 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		68CBC6D7257E943C00709835 /* You Done.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "You Done.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		68CBC6DA257E943C00709835 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		68CBC6DC257E943C00709835 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				68CBC729257F88F800709835 /* IntegrationListView.swift */,
 				68CBC7B825815F3C00709835 /* EventMonitor.swift */,
 				68CBC746257F944C00709835 /* Integration.swift */,
+				68C37459258A0A5A00F5C5E0 /* StringExtension.swift */,
 				68CBC8002585394500709835 /* Constants.swift */,
 				68CBC7FB2585278300709835 /* NSTextField.swift */,
 				68CBC7F1258391F600709835 /* Microfutures.swift */,
@@ -364,6 +367,7 @@
 				68CBC7DD258278D500709835 /* IntegrationView.swift in Sources */,
 				68CBC72A257F88F800709835 /* IntegrationListView.swift in Sources */,
 				68CBC7AB25812FB600709835 /* TaskView.swift in Sources */,
+				68C3745A258A0A5A00F5C5E0 /* StringExtension.swift in Sources */,
 				68CBC764257FAFFA00709835 /* IntegrationConfigurationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

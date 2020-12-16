@@ -29,7 +29,7 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
     let baseURL: URL
     @Published var isAvailable: Bool
     @Published var isInstalled: Bool = false
-    
+
     var state: State {
         isInstalled ? .installed : (
             isAvailable ? .available : .upcoming
@@ -161,7 +161,7 @@ class GithubIntegration: Integration {
         }
     }
     
-    struct Event: Identifiable, Equatable, Codable {
+    struct Event: Codable {
         var id: String
         var type: String
         var created_at: String
@@ -203,10 +203,6 @@ class GithubIntegration: Integration {
         
         func toDate() -> Date {
             return ISO8601DateFormatter().date(from: created_at)!
-        }
-        
-        static func == (lhs: GithubIntegration.Event, rhs: GithubIntegration.Event) -> Bool {
-            lhs.id == rhs.id
         }
     }
 }
