@@ -20,8 +20,8 @@ struct IntegrationConfigurationView: View {
                 Spacer()
             }
             VStack {
-                ForEach(Array(integration.StringDefaults.keys), id: \.self) { key in
-                    StringDefaultView(key: key, value: UserDefaults.standard.string(forKey: key) ?? integration.StringDefaults[key]!)
+                ForEach(integration.eventConfigurationList, id: \.name) { eventConfiguration in
+                    EventConfigurationView(eventConfiguration: eventConfiguration)
                 }
                 Spacer()
                 HStack {

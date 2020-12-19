@@ -91,7 +91,7 @@ struct StatusView: View {
                         Image("Unicorn").resizable().aspectRatio(contentMode: .fit)
                     }.buttonStyle(PlainButtonStyle())
                 } else {
-                    ScrollView(showsIndicators: false) {
+                    ScrollView(showsIndicators: taskList.taskList.count > 8) {
                         VStack {
                             ForEach(self.taskList.taskList) { task in
                                 TaskView(task: task)

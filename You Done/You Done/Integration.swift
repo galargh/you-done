@@ -23,11 +23,34 @@ class IntegrationStore: ObservableObject {
     }
 }
 
+class EventConfiguration: ObservableObject {
+    var name: String
+    var field: String
+    @Published var pattern: String
+    @Published var template: String
+    
+    init(name: String, field: String, pattern: String, template: String) {
+        self.name = name
+        self.field = field
+        self.pattern = UserDefaults.standard.string(forKey: "Pattern: \(name)") ?? pattern
+        self.template = UserDefaults.standard.string(forKey: "Template: \(name)") ?? template
+    }
+    
+    func commit() {
+        UserDefaults.standard.setValue(pattern, forKey: "Pattern: \(name)")
+        UserDefaults.standard.setValue(template, forKey: "Template: \(name)")
+    }
+    
+    func parse(_ string: String) -> String? {
+        string.firstMatch(of: pattern, as: template)
+    }
+}
+
 class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
     let id = UUID()
     let name: String
     let baseURL: URL
-    var StringDefaults: [String:String] = [:]
+    var eventConfigurationList: [EventConfiguration] = []
     @Published var isAvailable: Bool
     @Published var isInstalled: Bool = false
 
@@ -107,6 +130,13 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
 }
 
 class GithubIntegration: Integration {
+    static let OpenedPR = EventConfiguration(name: "Opened PR", field: "title", pattern: "(?<title>.*)", template: "Opened $title")
+    static let ClosedPR = EventConfiguration(name: "Closed PR", field: "title", pattern: "(?<title>.*)", template: "Closed $title")
+    static let ApprovedPR = EventConfiguration(name: "Approved PR", field: "title", pattern: "(?<title>.*)", template: "Approved $title")
+    static let DiscussedPR = EventConfiguration(name: "Discussed PR", field: "title", pattern: "(?<title>.*)", template: "Discussed $title")
+    static let RejectedPR = EventConfiguration(name: "Rejected PR", field: "title", pattern: "(?<title>.*)", template: "Requested changes from $title")
+    static let PushedCommit = EventConfiguration(name: "Pushed Commit", field: "message", pattern: "Merge pull request (?<pr_info>.*)", template: "Merged $pr_info")
+    
     init() {
         super.init(name: "GitHub",
                    baseURI: "https://api.github.com",
@@ -114,10 +144,7 @@ class GithubIntegration: Integration {
                    tokenURI: "https://github.com/login/oauth/access_token",
                    scopeList: ["user", "repo"],
                    secretInBody: true)
-        self.StringDefaults = [
-            GithubIntegration.OPENED_PULL_REQUEST_PATTERN_DEFAULT_KEY: GithubIntegration.OPENED_PULL_REQUEST_PATTERN_DEFAULT_VALUE,
-            GithubIntegration.OPENED_PULL_REQUEST_TEMPLATE_DEFAULT_KEY: GithubIntegration.OPENED_PULL_REQUEST_TEMPLATE_DEFAULT_VALUE
-        ]
+        self.eventConfigurationList = [GithubIntegration.OpenedPR, GithubIntegration.ClosedPR, GithubIntegration.ApprovedPR, GithubIntegration.DiscussedPR, GithubIntegration.RejectedPR, GithubIntegration.PushedCommit]
     }
     
     override func request(forURL url: URL) -> URLRequest {
@@ -160,8 +187,7 @@ class GithubIntegration: Integration {
     override func pull(date: Date = Date()) -> Future<[Task]> {
         return events(date: date).map { eventList in
             return eventList.map { event in
-                let text = event.toString()!
-                return Task(id: text, text: text)
+                return Task(id: event.toID(), text: event.toString()!)
             }
         }
     }
@@ -196,18 +222,33 @@ class GithubIntegration: Integration {
         func toString() -> String? {
             switch type {
             case "PullRequestEvent" where payload.action == "opened":
-                return payload.pull_request!.title.firstMatch(
-                    of: UserDefaults.standard.string(forKey: GithubIntegration.OPENED_PULL_REQUEST_PATTERN_DEFAULT_KEY) ?? GithubIntegration.OPENED_PULL_REQUEST_PATTERN_DEFAULT_VALUE,
-                    as: UserDefaults.standard.string(forKey: GithubIntegration.OPENED_PULL_REQUEST_TEMPLATE_DEFAULT_KEY) ?? GithubIntegration.OPENED_PULL_REQUEST_TEMPLATE_DEFAULT_VALUE
-                )
-            case "PullRequestEvent" where ["closed", "reopened"].contains(payload.action):
-                return "\(payload.action!.capitalized) \(payload.pull_request!.title)"
-            case "PullRequestReviewEvent" where ["created"].contains(payload.action):
-                return "\(payload.review!.state.capitalized) \(payload.pull_request!.title)"
+                return GithubIntegration.OpenedPR.parse(payload.pull_request!.title)
+            case "PullRequestEvent" where payload.action == "closed":
+                return GithubIntegration.ClosedPR.parse(payload.pull_request!.title)
+            case "PullRequestReviewEvent" where payload.action == "created" && payload.review!.state == "approved":
+                return GithubIntegration.ApprovedPR.parse(payload.pull_request!.title)
+            case "PullRequestReviewEvent" where payload.action == "created" && payload.review!.state == "commented":
+                return GithubIntegration.DiscussedPR.parse(payload.pull_request!.title)
+            case "PullRequestReviewEvent" where payload.action == "created" && payload.review!.state == "changes_requested":
+                return GithubIntegration.RejectedPR.parse(payload.pull_request!.title)
             case "PushEvent":
-                return "Pushed \(payload.commits!.last!.message)"
+                return GithubIntegration.PushedCommit.parse(payload.commits!.last!.message)
             default:
                 return nil
+            }
+        }
+
+        func toID() -> String {
+            switch type {
+            case "PullRequestEvent":
+                return "\(payload.action!.capitalized)\(type)(\(payload.pull_request!.id)"
+            case "PullRequestReviewEvent":
+                let state = payload.review!.state.split(separator: "_").map { $0.capitalized }.joined(separator: "")
+                return "\(state)\(type)(\(payload.pull_request!.id)"
+            case "PushEvent":
+                return "\(type)(\(id))"
+            default:
+                return id
             }
         }
         
@@ -215,11 +256,6 @@ class GithubIntegration: Integration {
             return ISO8601DateFormatter().date(from: created_at)!
         }
     }
-    
-    static let OPENED_PULL_REQUEST_PATTERN_DEFAULT_KEY: String = "Opened Pull Request Pattern"
-    static let OPENED_PULL_REQUEST_PATTERN_DEFAULT_VALUE: String = "(.*)"
-    static let OPENED_PULL_REQUEST_TEMPLATE_DEFAULT_KEY: String = "Opened Pull Request Template"
-    static let OPENED_PULL_REQUEST_TEMPLATE_DEFAULT_VALUE: String = "Opened PR: $1"
 }
 
 class ZoomIntegration: Integration {
@@ -244,6 +280,11 @@ class SlackIntegration: Integration {
 class GoogleCalendarIntegration: Integration {
     private var email: String?
     
+    static let CreatedEvent = EventConfiguration(name: "Created Event", field: "summary", pattern: "(?<summary>.*)", template: "Attended $summary event as a creator")
+    static let OrganizedEvent = EventConfiguration(name: "Organized Event", field: "summary", pattern: "(?<summary>.*)", template: "Attended $summary event as an organiser")
+    static let AttendedEvent = EventConfiguration(name: "Attended Event", field: "summary", pattern: "(?<summary>.*)", template: "Attended $summary event")
+
+    
     init() {
         super.init(name: "Google Calendar",
                    baseURI: "https://www.googleapis.com",
@@ -256,6 +297,7 @@ class GoogleCalendarIntegration: Integration {
                    host: "https://www.googleapis.com",
                    redirectURIs: ["urn:ietf:wg:oauth:2.0:oob"])
         self.alsoIntercept403 = true
+        self.eventConfigurationList = [GoogleCalendarIntegration.CreatedEvent, GoogleCalendarIntegration.OrganizedEvent, GoogleCalendarIntegration.AttendedEvent]
     }
     
     func user() -> Future<User> {
@@ -335,11 +377,11 @@ class GoogleCalendarIntegration: Integration {
         
         func toString(email: String) -> String? {
             if creator.email == email {
-                return "Created \(summary) event"
+                return GoogleCalendarIntegration.CreatedEvent.parse(summary)
             } else if organizer.email == email {
-                return "Organized \(summary) event"
+                return GoogleCalendarIntegration.OrganizedEvent.parse(summary)
             } else if (attendees?.contains { attendee in attendee.email == email && attendee.responseStatus == "accepted" } ?? false) {
-                return "Attended \(summary) event"
+                return GoogleCalendarIntegration.AttendedEvent.parse(summary)
             } else {
                 return nil
             }

@@ -17,9 +17,9 @@ extension String {
     func firstMatch(of pattern: String, options: NSRegularExpression.MatchingOptions = [], as template: String) -> String? {
         var result: String = template
         guard let patternMatch = self.firstMatch(of: pattern, with: options) else { return nil }
-        while let templateMatch = result.firstMatch(of: "\\$([a-zA-Z0-9]+)") {
-            print(templateMatch)
-            let key = String(result[Range(templateMatch.range(at: 1), in: result)!])
+        while let templateMatch = result.firstMatch(of: "\\$([a-zA-Z0-9_-]+|{[a-zA-Z0-9_-]+})") {
+            var key = String(result[Range(templateMatch.range(at: 1), in: result)!])
+            key.removeAll(where: { ["{", "}"].contains($0) })
             var patternRange: NSRange
             if let idx = Int(key) {
                 patternRange = patternMatch.range(at: idx)
