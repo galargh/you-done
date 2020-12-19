@@ -16,4 +16,7 @@ extension Date {
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         return dateFormatter.date(from: dayString)!
     }
+    
+    static let today = Date().toDay()
+    static let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!.toDay()
 }

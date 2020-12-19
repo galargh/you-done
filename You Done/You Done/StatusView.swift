@@ -18,9 +18,25 @@ struct StatusView: View {
     }
 
     @State private var date = Date()
+    @State private var dateString = "Today"
     @State private var showDatePicker = false
-    private var dateString: String {
-        date.toDay() == Date().toDay() ? "Today" : dateFormatter.string(from: date)
+    
+
+    private func setDate(_ date: Date) {
+        self.date = date;
+        self.taskList.reset();
+        refreshDateString()
+        loadTaskList()
+    }
+    
+    private func refreshDateString() {
+        if (date.toDay() == Date.today) {
+            self.dateString = "Today"
+        } else if (date.toDay() == Date.yesterday) {
+            self.dateString = "Yesterday"
+        } else {
+            self.dateString = dateFormatter.string(from: date)
+        }
     }
     
     @State private var pullingCounter = 0
@@ -68,7 +84,7 @@ struct StatusView: View {
                         ) {
                             DatePicker("?", selection: Binding(
                                 get: { return self.date },
-                                set: { self.date = $0; self.taskList.reset(); loadTaskList() }
+                                set: { setDate($0) }
                             ), in: ...Date(), displayedComponents: .date).datePickerStyle(GraphicalDatePickerStyle())
                                 .labelsHidden()
                         }
@@ -133,6 +149,9 @@ struct StatusView: View {
                 }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(true)
             }
             
-        }.onAppear { loadTaskList(force: false) }
+        }.onAppear {
+            refreshDateString()
+            loadTaskList(force: false)
+        }
     }
 }
