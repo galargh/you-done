@@ -171,12 +171,13 @@ class GithubIntegration: Integration {
     
     func events(date: Date = Date()) -> Future<[Event]> {
         return user().flatMap { user in
-            return self.request(path: "users/\(user.login)/events").map { response -> [Event] in
-                let data = try response.responseData()
-                let decoder = JSONDecoder()
-                //print(JSON(data))
-                return try decoder.decode([Event].self, from: data)
-            }
+            return(1...10).map { page in
+                return self.request(path: "users/\(user.login)/events", parameters: ["page": "\(page)"]).map { response -> [Event] in
+                    let data = try response.responseData()
+                    let decoder = JSONDecoder()
+                    return try decoder.decode([Event].self, from: data)
+                }
+            }.flatten().map { $0.reduce([], +) }
         }.map { eventList in
             let day = date.toDay()
             return try eventList.filter { event in
@@ -345,11 +346,7 @@ class GoogleCalendarIntegration: Integration {
                     let decoder = JSONDecoder()
                     return try decoder.decode(Events.self, from: data)
                 }
-            }.flatten().map { eventsList -> [Event] in
-                return eventsList.reduce([]) { result, events in
-                    return result + events.items
-                }
-            }
+            }.flatten().map { $0.map { $0.items } }.map { $0.reduce([], +) }
         }.map { eventList in
             return try eventList.filter { event in
                 try event.toString(email: self.email!) != nil
