@@ -41,8 +41,8 @@ class EventConfiguration: ObservableObject {
         UserDefaults.standard.setValue(template, forKey: "Template: \(name)")
     }
     
-    func parse(_ string: String) -> String? {
-        string.firstMatch(of: pattern, as: template)
+    func parse(_ string: String) throws -> String? {
+        return try string.firstMatch(of: pattern, as: template)
     }
 }
 
@@ -135,6 +135,7 @@ class GithubIntegration: Integration {
     static let ApprovedPR = EventConfiguration(name: "Approved PR", field: "title", pattern: "(?<title>.*)", template: "Approved $title")
     static let DiscussedPR = EventConfiguration(name: "Discussed PR", field: "title", pattern: "(?<title>.*)", template: "Discussed $title")
     static let RejectedPR = EventConfiguration(name: "Rejected PR", field: "title", pattern: "(?<title>.*)", template: "Requested changes from $title")
+    // THIS DOESN'T WORK!
     static let PushedCommit = EventConfiguration(name: "Pushed Commit", field: "message", pattern: "Merge pull request (?<pr_info>.*)", template: "Merged $pr_info")
     
     init() {
@@ -178,16 +179,16 @@ class GithubIntegration: Integration {
             }
         }.map { eventList in
             let day = date.toDay()
-            return eventList.filter { event in
-                event.toDate().toDay() == day && event.toString() != nil
+            return try eventList.filter { event in
+                try event.toDate().toDay() == day && event.toString() != nil
             }
         }
     }
     
     override func pull(date: Date = Date()) -> Future<[Task]> {
         return events(date: date).map { eventList in
-            return eventList.map { event in
-                return Task(id: event.toID(), text: event.toString()!)
+            return try eventList.map { event in
+                return try Task(id: event.toID(), text: event.toString()!)
             }
         }
     }
@@ -219,20 +220,20 @@ class GithubIntegration: Integration {
             var state: String
         }
         
-        func toString() -> String? {
+        func toString() throws -> String? {
             switch type {
             case "PullRequestEvent" where payload.action == "opened":
-                return GithubIntegration.OpenedPR.parse(payload.pull_request!.title)
+                return try GithubIntegration.OpenedPR.parse(payload.pull_request!.title)
             case "PullRequestEvent" where payload.action == "closed":
-                return GithubIntegration.ClosedPR.parse(payload.pull_request!.title)
+                return try GithubIntegration.ClosedPR.parse(payload.pull_request!.title)
             case "PullRequestReviewEvent" where payload.action == "created" && payload.review!.state == "approved":
-                return GithubIntegration.ApprovedPR.parse(payload.pull_request!.title)
+                return try GithubIntegration.ApprovedPR.parse(payload.pull_request!.title)
             case "PullRequestReviewEvent" where payload.action == "created" && payload.review!.state == "commented":
-                return GithubIntegration.DiscussedPR.parse(payload.pull_request!.title)
+                return try GithubIntegration.DiscussedPR.parse(payload.pull_request!.title)
             case "PullRequestReviewEvent" where payload.action == "created" && payload.review!.state == "changes_requested":
-                return GithubIntegration.RejectedPR.parse(payload.pull_request!.title)
+                return try GithubIntegration.RejectedPR.parse(payload.pull_request!.title)
             case "PushEvent":
-                return GithubIntegration.PushedCommit.parse(payload.commits!.last!.message)
+                return try GithubIntegration.PushedCommit.parse(payload.commits!.last!.message)
             default:
                 return nil
             }
@@ -348,16 +349,16 @@ class GoogleCalendarIntegration: Integration {
                 }
             }.first!
         }.map { events in
-            return events.items.filter { event in
-                event.toString(email: self.email!) != nil
+            return try events.items.filter { event in
+                try event.toString(email: self.email!) != nil
             }
         }
     }
     
     override func pull(date: Date = Date()) -> Future<[Task]> {
         return events(date: date).map { eventList in
-            return eventList.map { event in
-                let text = event.toString(email: self.email!)!
+            return try eventList.map { event in
+                let text = try event.toString(email: self.email!)!
                 return Task(id: text, text: text)
             }
         }
@@ -375,13 +376,13 @@ class GoogleCalendarIntegration: Integration {
         var organizer: User
         var attendees: [Attendee]?
         
-        func toString(email: String) -> String? {
+        func toString(email: String) throws -> String? {
             if creator.email == email {
-                return GoogleCalendarIntegration.CreatedEvent.parse(summary)
+                return try GoogleCalendarIntegration.CreatedEvent.parse(summary)
             } else if organizer.email == email {
-                return GoogleCalendarIntegration.OrganizedEvent.parse(summary)
+                return try GoogleCalendarIntegration.OrganizedEvent.parse(summary)
             } else if (attendees?.contains { attendee in attendee.email == email && attendee.responseStatus == "accepted" } ?? false) {
-                return GoogleCalendarIntegration.AttendedEvent.parse(summary)
+                return try GoogleCalendarIntegration.AttendedEvent.parse(summary)
             } else {
                 return nil
             }

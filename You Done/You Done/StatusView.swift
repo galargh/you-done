@@ -23,8 +23,9 @@ struct StatusView: View {
     
 
     private func setDate(_ date: Date) {
-        self.date = date;
-        self.taskList.reset();
+        self.date = date
+        self.taskList.reset()
+        self.showDatePicker = false
         refreshDateString()
         loadTaskList()
     }

@@ -8,16 +8,16 @@
 import Foundation
 
 extension String {
-    func firstMatch(of pattern: String, with options: NSRegularExpression.MatchingOptions = []) -> NSTextCheckingResult? {
+    func firstMatch(of pattern: String, with options: NSRegularExpression.MatchingOptions = []) throws -> NSTextCheckingResult? {
         let range = NSRange(location: 0, length: self.utf16.count)
-        let regex = try! NSRegularExpression(pattern: pattern)
+        let regex = try NSRegularExpression(pattern: pattern)
         return regex.firstMatch(in: self, options: options, range: range)
     }
     
-    func firstMatch(of pattern: String, options: NSRegularExpression.MatchingOptions = [], as template: String) -> String? {
+    func firstMatch(of pattern: String, options: NSRegularExpression.MatchingOptions = [], as template: String) throws -> String? {
         var result: String = template
-        guard let patternMatch = self.firstMatch(of: pattern, with: options) else { return nil }
-        while let templateMatch = result.firstMatch(of: "\\$([a-zA-Z0-9_-]+|\\{[a-zA-Z0-9_-]+\\})") {
+        guard let patternMatch = try self.firstMatch(of: pattern, with: options) else { return nil }
+        while let templateMatch = try result.firstMatch(of: "\\$([a-zA-Z0-9_-]+|\\{[a-zA-Z0-9_-]+\\})") {
             var key = String(result[Range(templateMatch.range(at: 1), in: result)!])
             key.removeAll(where: { ["{", "}"].contains($0) })
             var patternRange: NSRange
