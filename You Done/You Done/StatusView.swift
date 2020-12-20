@@ -9,6 +9,7 @@ import SwiftUI
 
 struct StatusView: View {
     @EnvironmentObject var integrationStore: IntegrationStore
+    @Binding var date: Date
     @ObservedObject var taskList: TaskList
 
     var dateFormatter: DateFormatter {
@@ -16,8 +17,7 @@ struct StatusView: View {
         formatter.dateStyle = .long
         return formatter
     }
-
-    @State private var date = Date()
+    
     @State private var dateString = "Today"
     @State private var showDatePicker = false
     
@@ -40,27 +40,25 @@ struct StatusView: View {
         }
     }
     
-    @State private var pullingCounter = 0
-    private var isPulling: Bool { pullingCounter != 0 }
+    @State private var alert: String?
+    @State private var isPulling = false
     private func loadTaskList(force: Bool = true) {
         if (taskList.isEmpty || force) {
-            pullingCounter += 1
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                pullingCounter -= 1
-            }
-            integrationStore.all(forState: .installed).forEach { integration in
-                pullingCounter += 1
-                integration.pull(date: date).subscribe(
-                    onNext: { pulledTaskList in
-                        taskList.append(contentsOf: pulledTaskList)
-                        pullingCounter -= 1
-                    },
-                    onError: { error in
-                        print(error)
-                        pullingCounter -= 1
-                    }
-                )
-            }
+            let deadline = DispatchTime.now() + 1
+            var errorList: [Error] = []
+            isPulling = true
+            integrationStore.all(forState: .installed).map { $0.pull(date: date) }.subscribe(onNext: { pulledTaskList in
+                taskList.append(contentsOf: pulledTaskList)
+            }, onError: { error in
+                errorList.append(error)
+            }, onFinal: {
+                DispatchQueue.main.asyncAfter(deadline: deadline) {
+                    isPulling = false
+                }
+                if (!errorList.isEmpty) {
+                    self.alert = errorList.map { $0.localizedDescription }.joined(separator: "\n")
+                }
+            })
         }
     }
     
@@ -100,6 +98,16 @@ struct StatusView: View {
                             .animation(isPulling ? foreverAnimation : .default)
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling)
+                    .sheet(isPresented: .constant(alert != nil)) {
+                        Text(alert ?? "Unknown error").padding()
+                        Button(action: { alert = nil }) {
+                            Image("Check Mark Colour")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                        }
+                        .buttonStyle(PlainButtonStyle()).padding()
+                    }
                 }
                 if (self.taskList.taskList.isEmpty) {
                     Button(action: {
