@@ -310,13 +310,11 @@ class GoogleCalendarIntegration: Integration {
     }
     
     func calendarList() -> Future<CalendarList> {
-        /*
-        return request(path: "calendar/v3/users/me/calendarList").map { response in
+        /*return request(path: "calendar/v3/users/me/calendarList").map { response in
             let data = try response.responseData()
             let decoder = JSONDecoder()
             return try decoder.decode(CalendarList.self, from: data)
-        }
-        */
+        }*/
         return Future { completion in completion(.success(CalendarList(items: [CalendarListEntry(id: "primary")]))) }
     }
     
@@ -347,9 +345,13 @@ class GoogleCalendarIntegration: Integration {
                     let decoder = JSONDecoder()
                     return try decoder.decode(Events.self, from: data)
                 }
-            }.first!
-        }.map { events in
-            return try events.items.filter { event in
+            }.flatten().map { eventsList -> [Event] in
+                return eventsList.reduce([]) { result, events in
+                    return result + events.items
+                }
+            }
+        }.map { eventList in
+            return try eventList.filter { event in
                 try event.toString(email: self.email!) != nil
             }
         }
