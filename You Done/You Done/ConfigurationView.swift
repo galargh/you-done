@@ -91,16 +91,3 @@ struct ConfigurationView_Previews: PreviewProvider {
         ConfigurationView()
     }
 }
-/*
- 
- HStack {
-     Button(action: { print("tap") }, label: {
-         Image("Cancel Colour")
-             .resizable()
-             .aspectRatio(contentMode: .fit)
-             .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
-     } ).buttonStyle(PlainButtonStyle())
-     Text("Commit Pushes")
-     Spacer()
- }
- */

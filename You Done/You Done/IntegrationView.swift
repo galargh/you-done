@@ -11,7 +11,8 @@ struct IntegrationView: View {
     private let publisher = NotificationCenter.default.publisher(for: Integration.Notification)
     
     @ObservedObject var integration: Integration
-    @Binding var integrationName: String?    
+    @Binding var integrationName: String?
+    @State var alert: String?
     
     var body: some View {
         HStack {
@@ -26,17 +27,13 @@ struct IntegrationView: View {
                 } ).buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
             } else if (integration.state == .available) {
                 Button(action: {
-                    print(NSApp.windows)
-                    integration.oauth2.authorizeEmbedded(from: NSApp.windows[1]) {
-                        authParameters, error in
-                            if let params = authParameters {
-                                print("Authorized! Access token is in `oauth2.accessToken`")
-                                print(integration.oauth2.accessToken!)
-                                print("Authorized! Additional parameters: \(params)")
-                                integration.isInstalled = true
-                            } else {
-                                print("Authorization was canceled or went wrong: \(String(describing: error))")
-                            }
+                    integration.oauth2.authorizeEmbedded(from: NSApp.windows[1]) { authParameters, error in
+                        if authParameters != nil {
+                            integration.isInstalled = true
+                            alert = "Congratulations! You're all set!"
+                        } else {
+                            alert = "Authorization was canceled or went wrong: \(error!.localizedDescription)"
+                        }
                     }
                 }, label: {
                     Image(integration.oauth2.isAuthorizing ? "Download" : "Download Colour")
@@ -51,13 +48,12 @@ struct IntegrationView: View {
             if let url = notification.object as? URL {
                 if url.lastPathComponent == integration.name {
                     do {
-                        print("Handling \(url) in \(integration.name)")
                         try integration.oauth2.handleRedirectURL(url)
                     } catch let error {
-                        print(error)
+                        alert = "Authorization failed during redirect handling: \(error.localizedDescription)"
                     }
                 }
             }
-        }
+        }.modifier(AlertSheet(alert: $alert))
     }
 }

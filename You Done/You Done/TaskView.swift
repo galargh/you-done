@@ -14,24 +14,13 @@ struct TaskView: View {
     var body: some View {
         if (!task.deleted) {
             HStack {
-                TextField(
-                    "",
-                    text: Binding(
-                        get: { return self.task.text },
-                        set: { self.task.text = $0 }
-                    ),
-                    onEditingChanged: { isEditing = $0 },
-                    onCommit: {
-                        print("commit")
-                    }
-                ).textFieldStyle(PlainTextFieldStyle())
+                TextField("", text: $task.text, onEditingChanged: { isEditing = $0 }).textFieldStyle(PlainTextFieldStyle())
                 Spacer()
-                Button(action: { print("Save") }) {
+                Button(action: {}) {
                     Image(isEditing ? "Floppy Colour" : "Floppy")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
-                    
                 }.buttonStyle(PlainButtonStyle()).disabled(!isEditing).padding(.leading, Constants.ButtonLeadingPadding)
                 Button(action: { self.task.deleted = true }) {
                     Image("Dump Colour")

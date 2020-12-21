@@ -98,16 +98,7 @@ struct StatusView: View {
                             .animation(isPulling ? foreverAnimation : .default)
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling)
-                    .sheet(isPresented: .constant(alert != nil)) {
-                        Text(alert ?? "Unknown error").padding()
-                        Button(action: { alert = nil }) {
-                            Image("Check Mark Colour")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                        }
-                        .buttonStyle(PlainButtonStyle()).padding()
-                    }
+                    .modifier(AlertSheet(alert: $alert))
                 }
                 if (self.taskList.taskList.isEmpty) {
                     Button(action: {
@@ -150,14 +141,13 @@ struct StatusView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                 }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(self.taskList.taskList.isEmpty)
-                Button(action: { print("Send") }) {
+                Button(action: {}) {
                     Image("Send")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                 }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(true)
             }
-            
         }.onAppear {
             refreshDateString()
             loadTaskList(force: false)
