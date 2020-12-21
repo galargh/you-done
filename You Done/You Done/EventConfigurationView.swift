@@ -57,12 +57,22 @@ struct EventConfigurationView: View {
     @ObservedObject var eventConfiguration: EventConfiguration
     @State private var totalHeight = CGFloat.zero
     
+    @State private var alert: String?
+    
     var body: some View {
         HStack {
             GeometryReader { g in
                 let context = WrapperContext(geometry: g)
                 let vertical = CGFloat(5)
                 let horizontal = CGFloat(5)
+                let commit = {
+                    do {
+                        try eventConfiguration.validate()
+                        eventConfiguration.commit()
+                    } catch let error {
+                        alert = error.localizedDescription
+                    }
+                }
                 ZStack(alignment: .topLeading) {
                     Text("If")
                         .padding(.vertical, vertical)
@@ -73,7 +83,7 @@ struct EventConfigurationView: View {
                     Text("matches")
                         .padding(.vertical, vertical)
                         .modifier(Wrapper(context: context))
-                    TextField("", text: $eventConfiguration.pattern, onCommit: eventConfiguration.commit)
+                    TextField("", text: $eventConfiguration.pattern, onCommit: commit)
                         .textFieldStyle(PlainTextFieldStyle())
                         .padding(.vertical, vertical)
                         .padding(.horizontal, horizontal)
@@ -84,7 +94,7 @@ struct EventConfigurationView: View {
                     Text("fill")
                         .padding(.vertical, vertical)
                         .modifier(Wrapper(context: context))
-                    TextField("", text: $eventConfiguration.template, onCommit: eventConfiguration.commit)
+                    TextField("", text: $eventConfiguration.template, onCommit: commit)
                         .textFieldStyle(PlainTextFieldStyle())
                         .padding(.vertical, vertical)
                         .padding(.horizontal, horizontal)
@@ -95,7 +105,7 @@ struct EventConfigurationView: View {
                 }.background(viewHeightReader($totalHeight))
                 Spacer()
             }
-        }.frame(height: totalHeight)
+        }.frame(height: totalHeight).modifier(AlertSheet(alert: $alert))
     }
     
     private func viewHeightReader(_ binding: Binding<CGFloat>, colour: Color = .clear) -> some View {

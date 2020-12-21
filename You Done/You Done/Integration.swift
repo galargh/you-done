@@ -36,6 +36,23 @@ class EventConfiguration: ObservableObject {
         self.template = UserDefaults.standard.string(forKey: "Template: \(name)") ?? template
     }
     
+    func validate() throws {
+        try NSRegularExpression(pattern: pattern)
+        let groupsInPattern = try pattern.matches(of: NSRegularExpression.forGroupInPattern.pattern).map { match in
+            String(pattern[Range(match.range(at: 1), in: pattern)!])
+        }
+        let groupsInTemplate = try template.matches(of: NSRegularExpression.forGroupInTemplate.pattern).map { match in
+            var group = String(template[Range(match.range(at: 1), in: template)!])
+            group.removeAll(where: { ["{", "}"].contains($0) })
+            return group
+        }.filter { Int($0) == nil }
+        let diff = Set(groupsInTemplate).subtracting(Set(groupsInPattern))
+        if (!diff.isEmpty) {
+            throw NSError(domain: NSCocoaErrorDomain, code: NSFormattingError, userInfo: ["NSInvalidValue": template])
+        }
+        
+    }
+    
     func commit() {
         UserDefaults.standard.setValue(pattern, forKey: "Pattern: \(name)")
         UserDefaults.standard.setValue(template, forKey: "Template: \(name)")
