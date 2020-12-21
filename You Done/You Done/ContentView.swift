@@ -37,11 +37,11 @@ struct ContentView: View {
                                 integrationName = nil
                             }
                         }) {
-                            Image((!configure && integrationName == nil) ? "Gears Colour" : "Stick Colour")
+                            Image((!configure && integrationName == nil) ? "Gears Colour" : "Turn Back Colour")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
-                        }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
+                                .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                        }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
                     }.padding()
                     HStack {
                         Button(action: { tab = "status" }) {

@@ -76,7 +76,7 @@ struct ConfigurationView: View {
                 Button(action: {
                     NSApp.terminate(nil)
                 }, label: {
-                    Image("Dump Colour")
+                    Image("Exit Colour")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
