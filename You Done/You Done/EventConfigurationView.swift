@@ -85,14 +85,14 @@ struct EventConfigurationView: View {
                         .padding(.vertical, vertical)
                         .modifier(Wrapper(context: context))
                     HStack {
+                        TextField("", text: $eventConfiguration.pattern, onCommit: commit)
+                            .textFieldStyle(PlainTextFieldStyle())
                         if (!eventConfiguration.isPatternValid) {
-                            Image("Cancel Colour")
+                            Image("Caution Colour")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 16.0, height: 16.0)
                         }
-                        TextField("", text: $eventConfiguration.pattern, onCommit: commit)
-                            .textFieldStyle(PlainTextFieldStyle())
                     }.shadow(radius: Constants.ShadowRadius)
                         .padding(.vertical, vertical)
                         .padding(.horizontal, horizontal)
@@ -104,14 +104,14 @@ struct EventConfigurationView: View {
                         .padding(.vertical, vertical)
                         .modifier(Wrapper(context: context))
                     HStack {
+                        TextField("", text: $eventConfiguration.template, onCommit: commit)
+                            .textFieldStyle(PlainTextFieldStyle())
                         if (!eventConfiguration.isTemplateValid) {
-                            Image("Cancel Colour")
+                            Image("Caution Colour")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 16.0, height: 16.0)
                         }
-                        TextField("", text: $eventConfiguration.template, onCommit: commit)
-                            .textFieldStyle(PlainTextFieldStyle())
                     }.shadow(radius: Constants.ShadowRadius)
                         .padding(.vertical, vertical)
                         .padding(.horizontal, horizontal)

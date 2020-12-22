@@ -43,10 +43,10 @@ struct ContentView: View {
                     }.padding()
                     HStack {
                         Button(action: { tab = "status" }) {
-                            Text("Status").foregroundColor(colourScheme.headerText).underline(tab == "status").bold(tab == "status").shadow(radius: Constants.ShadowRadius)
+                            Text("Status").foregroundColor(colourScheme.headerText).underline(tab == "status").bold(tab == "status")
                         }.buttonStyle(PlainButtonStyle())
                         Button(action: { tab = "integrations" }) {
-                            Text("Integrations").foregroundColor(colourScheme.headerText).underline(tab == "integrations").bold(tab == "integrations").shadow(radius: Constants.ShadowRadius)
+                            Text("Integrations").foregroundColor(colourScheme.headerText).underline(tab == "integrations").bold(tab == "integrations")
                         }.buttonStyle(PlainButtonStyle())
                         Spacer()
                     }.padding(.leading).visibility(hidden: .constant(configure || integrationName != nil))
