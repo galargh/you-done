@@ -12,6 +12,12 @@ extension NSRegularExpression {
     static let forGroupInTemplate = try! NSRegularExpression(pattern: "\\$([a-zA-Z][a-zA-Z0-9]*|\\{[a-zA-Z][a-zA-Z0-9]*\\}|[0-9]+|\\{[0-9]+\\})")
 }
 
+extension String: Identifiable {
+    public var id: String { self }
+    
+    
+}
+
 extension String {
     func firstMatch(of pattern: String, with options: NSRegularExpression.MatchingOptions = []) throws -> NSTextCheckingResult? {
         let range = NSRange(location: 0, length: self.utf16.count)

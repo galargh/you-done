@@ -18,6 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var integrationStore: IntegrationStore!
     var taskStore: TaskStore!
     var colourScheme: ColourScheme!
+    var alertContext: AlertContext!
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -28,12 +29,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         integrationStore = IntegrationStore()
         taskStore = TaskStore()
         colourScheme = ColourScheme()
+        alertContext = AlertContext()
         
         // Create the popover and set the content view.
         popover = NSPopover()
         popover.contentSize = NSSize(width: 600, height: 500)
         //popover.behavior = .transient
-        popover.contentViewController = NSHostingController(rootView: contentView.environmentObject(integrationStore).environmentObject(taskStore).environmentObject(colourScheme))
+        popover.contentViewController = NSHostingController(rootView: contentView.environmentObject(integrationStore).environmentObject(taskStore).environmentObject(colourScheme).environmentObject(alertContext))
 
         // Create the status item
         statusItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
@@ -74,6 +76,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let button = statusItem.button {
             if popover.isShown {
                 self.integrationStore.all.filter { $0.oauth2.isAuthorizing }.forEach { $0.oauth2.abortAuthorization() }
+                alertContext.message = nil
                 popover.performClose(sender)
                 globalEventMonitor.stop()
                 localEventMonitor.stop()

@@ -38,7 +38,7 @@ struct StatusView: View {
         }
     }
     
-    @State private var alert: String?
+    @EnvironmentObject var alertContext: AlertContext
     @State private var isPulling = false
     private func loadTaskList() {
         let deadline = DispatchTime.now() + 1
@@ -53,7 +53,7 @@ struct StatusView: View {
                 isPulling = false
             }
             if (!errorList.isEmpty) {
-                self.alert = errorList.map { $0.localizedDescription }.joined(separator: "\n")
+                self.alertContext.message = errorList.map { $0.localizedDescription }.joined(separator: "\n")
             }
         })
     }
@@ -94,7 +94,6 @@ struct StatusView: View {
                             .animation(isPulling ? foreverAnimation : .default)
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling)
-                    .modifier(AlertSheet(alert: $alert))
                 }
                 if (self.taskStore.taskList.isEmpty) {
                     Button(action: {

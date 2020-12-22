@@ -57,7 +57,7 @@ struct EventConfigurationView: View {
     @ObservedObject var eventConfiguration: EventConfiguration
     @State private var totalHeight = CGFloat.zero
     
-    @State private var alert: String?
+    @EnvironmentObject var alertContext: AlertContext
     
     var body: some View {
         HStack {
@@ -70,7 +70,7 @@ struct EventConfigurationView: View {
                         try eventConfiguration.validate()
                         eventConfiguration.commit()
                     } catch let error {
-                        alert = error.localizedDescription
+                        alertContext.message = error.localizedDescription
                     }
                 }
                 ZStack(alignment: .topLeading) {
@@ -105,7 +105,7 @@ struct EventConfigurationView: View {
                 }.background(viewHeightReader($totalHeight))
                 Spacer()
             }
-        }.frame(height: totalHeight).modifier(AlertSheet(alert: $alert))
+        }.frame(height: totalHeight)
     }
     
     private func viewHeightReader(_ binding: Binding<CGFloat>, colour: Color = .clear) -> some View {

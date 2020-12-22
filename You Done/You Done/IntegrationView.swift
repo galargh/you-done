@@ -12,7 +12,7 @@ struct IntegrationView: View {
     
     @ObservedObject var integration: Integration
     @Binding var integrationName: String?
-    @State var alert: String?
+    @EnvironmentObject var alertContext: AlertContext
     
     var body: some View {
         HStack {
@@ -30,9 +30,9 @@ struct IntegrationView: View {
                     integration.oauth2.authorizeEmbedded(from: NSApp.windows[1]) { authParameters, error in
                         if authParameters != nil {
                             integration.isInstalled = true
-                            alert = "Congratulations! You're all set!"
+                            alertContext.message = "Congratulations! You're all set!"
                         } else {
-                            alert = "Authorization was canceled or went wrong: \(error!.localizedDescription)"
+                            alertContext.message = "Authorization was canceled or went wrong: \(error!.localizedDescription)"
                         }
                     }
                 }, label: {
@@ -50,10 +50,10 @@ struct IntegrationView: View {
                     do {
                         try integration.oauth2.handleRedirectURL(url)
                     } catch let error {
-                        alert = "Authorization failed during redirect handling: \(error.localizedDescription)"
+                        alertContext.message = "Authorization failed during redirect handling: \(error.localizedDescription)"
                     }
                 }
             }
-        }.modifier(AlertSheet(alert: $alert))
+        }
     }
 }

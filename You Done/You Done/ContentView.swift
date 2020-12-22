@@ -64,7 +64,7 @@ struct ContentView: View {
                     ConfigurationView().visibility(hidden: .constant(!configure))
                 }.background(colourScheme.bodyBackground).foregroundColor(colourScheme.bodyText)
             }
-        }.background(colourScheme.headerBackground).foregroundColor(colourScheme.headerText)
+        }.background(colourScheme.headerBackground).foregroundColor(colourScheme.headerText).modifier(AlertSheet())
     }
 }
 

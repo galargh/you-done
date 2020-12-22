@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		68C3745A258A0A5A00F5C5E0 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C37459258A0A5A00F5C5E0 /* StringExtension.swift */; };
 		68C37464258AA76500F5C5E0 /* EventConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C37463258AA76500F5C5E0 /* EventConfigurationView.swift */; };
-		68C3746C2591163A00F5C5E0 /* AlertSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C3746B2591163A00F5C5E0 /* AlertSheetView.swift */; };
+		68C3746C2591163A00F5C5E0 /* AlertSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C3746B2591163A00F5C5E0 /* AlertSheet.swift */; };
 		68CBC6DB257E943C00709835 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DA257E943C00709835 /* AppDelegate.swift */; };
 		68CBC6DD257E943C00709835 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DC257E943C00709835 /* ContentView.swift */; };
 		68CBC6E0257E943C00709835 /* You_Done.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DE257E943C00709835 /* You_Done.xcdatamodeld */; };
@@ -30,11 +30,11 @@
 		68CBC7BF25820A6200709835 /* OAuth2 in Frameworks */ = {isa = PBXBuildFile; productRef = 68CBC7BE25820A6200709835 /* OAuth2 */; };
 		68CBC7DD258278D500709835 /* IntegrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7DC258278D500709835 /* IntegrationView.swift */; };
 		68CBC7E32582D4DD00709835 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 68CBC7E22582D4DD00709835 /* SwiftyJSON */; };
-		68CBC7E82583641900709835 /* Composition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7E72583641900709835 /* Composition.swift */; };
-		68CBC7ED258381DF00709835 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7EC258381DF00709835 /* Date.swift */; };
+		68CBC7E82583641900709835 /* CompositionPrecedence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7E72583641900709835 /* CompositionPrecedence.swift */; };
+		68CBC7ED258381DF00709835 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7EC258381DF00709835 /* DateExtension.swift */; };
 		68CBC7F2258391F600709835 /* Microfutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7F1258391F600709835 /* Microfutures.swift */; };
-		68CBC7F725839DB000709835 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7F625839DB000709835 /* Sequence.swift */; };
-		68CBC7FC2585278300709835 /* NSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7FB2585278300709835 /* NSTextField.swift */; };
+		68CBC7F725839DB000709835 /* SequenceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7F625839DB000709835 /* SequenceExtension.swift */; };
+		68CBC7FC2585278300709835 /* NSTextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC7FB2585278300709835 /* NSTextFieldExtension.swift */; };
 		68CBC8012585394500709835 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC8002585394500709835 /* Constants.swift */; };
 		68CBC80E2585465400709835 /* TextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC80D2585465400709835 /* TextExtension.swift */; };
 		68CBC81325858DDE00709835 /* ConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC81225858DDD00709835 /* ConfigurationView.swift */; };
@@ -60,7 +60,7 @@
 /* Begin PBXFileReference section */
 		68C37459258A0A5A00F5C5E0 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		68C37463258AA76500F5C5E0 /* EventConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventConfigurationView.swift; sourceTree = "<group>"; };
-		68C3746B2591163A00F5C5E0 /* AlertSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSheetView.swift; sourceTree = "<group>"; };
+		68C3746B2591163A00F5C5E0 /* AlertSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSheet.swift; sourceTree = "<group>"; };
 		68CBC6D7257E943C00709835 /* You Done.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "You Done.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		68CBC6DA257E943C00709835 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		68CBC6DC257E943C00709835 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -87,11 +87,11 @@
 		68CBC7B825815F3C00709835 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
 		68CBC7C8258212DC00709835 /* oauth2.secret.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = oauth2.secret.xcconfig; sourceTree = "<group>"; };
 		68CBC7DC258278D500709835 /* IntegrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationView.swift; sourceTree = "<group>"; };
-		68CBC7E72583641900709835 /* Composition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Composition.swift; sourceTree = "<group>"; };
-		68CBC7EC258381DF00709835 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		68CBC7E72583641900709835 /* CompositionPrecedence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionPrecedence.swift; sourceTree = "<group>"; };
+		68CBC7EC258381DF00709835 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		68CBC7F1258391F600709835 /* Microfutures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Microfutures.swift; sourceTree = "<group>"; };
-		68CBC7F625839DB000709835 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
-		68CBC7FB2585278300709835 /* NSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTextField.swift; sourceTree = "<group>"; };
+		68CBC7F625839DB000709835 /* SequenceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceExtension.swift; sourceTree = "<group>"; };
+		68CBC7FB2585278300709835 /* NSTextFieldExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTextFieldExtension.swift; sourceTree = "<group>"; };
 		68CBC8002585394500709835 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		68CBC80D2585465400709835 /* TextExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextExtension.swift; sourceTree = "<group>"; };
 		68CBC81225858DDD00709835 /* ConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationView.swift; sourceTree = "<group>"; };
@@ -148,14 +148,14 @@
 		68CBC6D9257E943C00709835 /* You Done */ = {
 			isa = PBXGroup;
 			children = (
-				68C3746B2591163A00F5C5E0 /* AlertSheetView.swift */,
+				68C3746B2591163A00F5C5E0 /* AlertSheet.swift */,
 				68CBC6DA257E943C00709835 /* AppDelegate.swift */,
 				68CBC6E1257E943E00709835 /* Assets.xcassets */,
-				68CBC7E72583641900709835 /* Composition.swift */,
+				68CBC7E72583641900709835 /* CompositionPrecedence.swift */,
 				68CBC81225858DDD00709835 /* ConfigurationView.swift */,
 				68CBC8002585394500709835 /* Constants.swift */,
 				68CBC6DC257E943C00709835 /* ContentView.swift */,
-				68CBC7EC258381DF00709835 /* Date.swift */,
+				68CBC7EC258381DF00709835 /* DateExtension.swift */,
 				68C37463258AA76500F5C5E0 /* EventConfigurationView.swift */,
 				68CBC7B825815F3C00709835 /* EventMonitor.swift */,
 				68CBC6E9257E943E00709835 /* Info.plist */,
@@ -166,9 +166,9 @@
 				68CBC6E6257E943E00709835 /* Main.storyboard */,
 				68CBC7F1258391F600709835 /* Microfutures.swift */,
 				68CBC70F257F774600709835 /* NSImageExtension.swift */,
-				68CBC7FB2585278300709835 /* NSTextField.swift */,
+				68CBC7FB2585278300709835 /* NSTextFieldExtension.swift */,
 				68CBC6E3257E943E00709835 /* Preview Content */,
-				68CBC7F625839DB000709835 /* Sequence.swift */,
+				68CBC7F625839DB000709835 /* SequenceExtension.swift */,
 				68CBC731257F891B00709835 /* StatusView.swift */,
 				68C37459258A0A5A00F5C5E0 /* StringExtension.swift */,
 				68CBC7A525811B3200709835 /* Task.swift */,
@@ -356,23 +356,23 @@
 				68CBC6E0257E943C00709835 /* You_Done.xcdatamodeld in Sources */,
 				68CBC81325858DDE00709835 /* ConfigurationView.swift in Sources */,
 				68CBC8012585394500709835 /* Constants.swift in Sources */,
-				68CBC7ED258381DF00709835 /* Date.swift in Sources */,
+				68CBC7ED258381DF00709835 /* DateExtension.swift in Sources */,
 				68CBC6DD257E943C00709835 /* ContentView.swift in Sources */,
 				68CBC7A625811B3200709835 /* Task.swift in Sources */,
 				68CBC7B925815F3C00709835 /* EventMonitor.swift in Sources */,
 				68CBC7F2258391F600709835 /* Microfutures.swift in Sources */,
-				68CBC7FC2585278300709835 /* NSTextField.swift in Sources */,
-				68CBC7F725839DB000709835 /* Sequence.swift in Sources */,
+				68CBC7FC2585278300709835 /* NSTextFieldExtension.swift in Sources */,
+				68CBC7F725839DB000709835 /* SequenceExtension.swift in Sources */,
 				68CBC7982580F9FF00709835 /* ViewExtension.swift in Sources */,
 				68CBC747257F944C00709835 /* Integration.swift in Sources */,
 				68C37464258AA76500F5C5E0 /* EventConfigurationView.swift in Sources */,
 				68CBC732257F891B00709835 /* StatusView.swift in Sources */,
 				68CBC80E2585465400709835 /* TextExtension.swift in Sources */,
 				68CBC710257F774600709835 /* NSImageExtension.swift in Sources */,
-				68CBC7E82583641900709835 /* Composition.swift in Sources */,
+				68CBC7E82583641900709835 /* CompositionPrecedence.swift in Sources */,
 				68CBC6DB257E943C00709835 /* AppDelegate.swift in Sources */,
 				68CBC7DD258278D500709835 /* IntegrationView.swift in Sources */,
-				68C3746C2591163A00F5C5E0 /* AlertSheetView.swift in Sources */,
+				68C3746C2591163A00F5C5E0 /* AlertSheet.swift in Sources */,
 				68CBC72A257F88F800709835 /* IntegrationListView.swift in Sources */,
 				68CBC7AB25812FB600709835 /* TaskView.swift in Sources */,
 				68C3745A258A0A5A00F5C5E0 /* StringExtension.swift in Sources */,
