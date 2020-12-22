@@ -29,6 +29,24 @@ class EventConfiguration: ObservableObject {
     @Published var pattern: String
     @Published var template: String
     
+    var isPatternValid: Bool {
+        do {
+            try validatePattern()
+            return true
+        } catch {
+            return false
+        }
+    }
+    
+    var isTemplateValid: Bool {
+        do {
+            try validateTemplate()
+            return true
+        } catch {
+            return false
+        }
+    }
+    
     init(name: String, field: String, pattern: String, template: String) {
         self.name = name
         self.field = field
@@ -159,8 +177,7 @@ class GithubIntegration: Integration {
     static let ApprovedPR = EventConfiguration(name: "Approved PR", field: "title", pattern: "(?<title>.*)", template: "Approved $title")
     static let DiscussedPR = EventConfiguration(name: "Discussed PR", field: "title", pattern: "(?<title>.*)", template: "Discussed $title")
     static let RejectedPR = EventConfiguration(name: "Rejected PR", field: "title", pattern: "(?<title>.*)", template: "Requested changes from $title")
-    // THIS DOESN'T WORK!
-    static let PushedCommit = EventConfiguration(name: "Pushed Commit", field: "message", pattern: "Merge pull request (?<pr_info>.*)", template: "Merged $pr_info")
+    static let PushedCommit = EventConfiguration(name: "Pushed Commit", field: "message", pattern: "Merge pull request (?<prinfo>.*)", template: "Merged $prinfo")
     
     init() {
         super.init(name: "GitHub",

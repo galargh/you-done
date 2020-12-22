@@ -70,7 +70,8 @@ struct EventConfigurationView: View {
                         try eventConfiguration.validate()
                         eventConfiguration.commit()
                     } catch let error {
-                        alertContext.message = error.localizedDescription
+                        print(error)
+                        // alertContext.message = error.localizedDescription
                     }
                 }
                 ZStack(alignment: .topLeading) {
@@ -83,8 +84,16 @@ struct EventConfigurationView: View {
                     Text("matches")
                         .padding(.vertical, vertical)
                         .modifier(Wrapper(context: context))
-                    TextField("", text: $eventConfiguration.pattern, onCommit: commit)
-                        .textFieldStyle(PlainTextFieldStyle())
+                    HStack {
+                        if (!eventConfiguration.isPatternValid) {
+                            Image("Cancel Colour")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 16.0, height: 16.0)
+                        }
+                        TextField("", text: $eventConfiguration.pattern, onCommit: commit)
+                            .textFieldStyle(PlainTextFieldStyle())
+                    }
                         .padding(.vertical, vertical)
                         .padding(.horizontal, horizontal)
                         .background(colourScheme.headerBackground)
@@ -94,8 +103,16 @@ struct EventConfigurationView: View {
                     Text("fill")
                         .padding(.vertical, vertical)
                         .modifier(Wrapper(context: context))
-                    TextField("", text: $eventConfiguration.template, onCommit: commit)
-                        .textFieldStyle(PlainTextFieldStyle())
+                    HStack {
+                        if (!eventConfiguration.isTemplateValid) {
+                            Image("Cancel Colour")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 16.0, height: 16.0)
+                        }
+                        TextField("", text: $eventConfiguration.template, onCommit: commit)
+                            .textFieldStyle(PlainTextFieldStyle())
+                    }
                         .padding(.vertical, vertical)
                         .padding(.horizontal, horizontal)
                         .background(colourScheme.headerBackground)
