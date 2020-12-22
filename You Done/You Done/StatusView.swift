@@ -145,6 +145,9 @@ struct StatusView: View {
             }
         }.onAppear {
             refreshDateString()
+            if (UserDefaults.standard.bool(forKey: "Active Pull")) {
+                loadTaskList()
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ConfigurationView: View {
     @EnvironmentObject var colourScheme: ColourScheme
-    @State var backgroundPull = false
+    @State var activePull = UserDefaults.standard.bool(forKey: "Active Pull")
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -19,9 +19,12 @@ struct ConfigurationView: View {
                 }
             ) {
                 HStack {
-                    Text("Background Pull").frame(minWidth: 150, alignment: .leading)
-                    Button(action: { backgroundPull.toggle() }, label: {
-                        Image(backgroundPull ? "Check Mark Colour" : "Cancel Colour")
+                    Text("Active Pull").frame(minWidth: 150, alignment: .leading)
+                    Button(action: {
+                        activePull.toggle()
+                        UserDefaults.standard.setValue(activePull, forKey: "Active Pull")
+                    }, label: {
+                        Image(activePull ? "Check Mark Colour" : "Cancel Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
