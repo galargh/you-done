@@ -37,7 +37,7 @@ class EventConfiguration: ObservableObject {
     }
     
     func validatePattern() throws {
-        try NSRegularExpression(pattern: pattern)
+        let _ = try NSRegularExpression(pattern: pattern)
     }
     
     func validateTemplate() throws {
