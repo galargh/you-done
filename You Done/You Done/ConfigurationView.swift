@@ -28,6 +28,7 @@ struct ConfigurationView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                            .shadow(radius: Constants.ShadowRadius)
                     } ).buttonStyle(PlainButtonStyle())
                 }.padding(.leading)
             }
@@ -36,42 +37,22 @@ struct ConfigurationView: View {
                     Text("Colour Scheme").bold()
                 }
             ) {
-                Picker(selection: Binding(
-                    get: { return self.colourScheme.headerBackground },
-                    set: { self.colourScheme.headerBackground = $0 }
-                ), label: Text("Header Background").frame(minWidth: 150, alignment: .leading)) {
-                    ForEach(Constants.Colours, id: \.self.description) { colour in
-                        Rectangle().fill(colour).tag(colour)
-                    }
-                }//.pickerStyle(SegmentedPickerStyle())
-                .padding(.leading)
-                Picker(selection: Binding(
-                    get: { return self.colourScheme.headerText },
-                    set: { self.colourScheme.headerText = $0 }
-                ), label: Text("Header Text").frame(minWidth: 150, alignment: .leading)) {
-                    ForEach(Constants.Colours, id: \.self.description) { colour in
-                        Rectangle().fill(colour).tag(colour)
-                    }
-                }//.pickerStyle(SegmentedPickerStyle())
-                .padding(.leading)
-                Picker(selection: Binding(
-                    get: { return self.colourScheme.bodyBackground },
-                    set: { self.colourScheme.bodyBackground = $0 }
-                ), label: Text("Body Background").frame(minWidth: 150, alignment: .leading)) {
-                    ForEach(Constants.Colours, id: \.self.description) { colour in
-                        Rectangle().fill(colour).tag(colour)
-                    }
-                }//.pickerStyle(SegmentedPickerStyle())
-                .padding(.leading)
-                Picker(selection: Binding(
-                    get: { return self.colourScheme.bodyText },
-                    set: { self.colourScheme.bodyText = $0 }
-                ), label: Text("Body Text").frame(minWidth: 150, alignment: .leading)) {
-                    ForEach(Constants.Colours, id: \.self.description) { colour in
-                        Rectangle().fill(colour).tag(colour)
-                    }
-                }//.pickerStyle(SegmentedPickerStyle())
-                .padding(.leading)
+                HStack {
+                    Text("Header Background").frame(minWidth: 150, alignment: .leading)
+                    ColourPickerView(colour: $colourScheme.headerBackground)
+                }.padding(.leading)
+                HStack {
+                    Text("Header Colour").frame(minWidth: 150, alignment: .leading)
+                    ColourPickerView(colour: $colourScheme.headerText)
+                }.padding(.leading)
+                HStack {
+                    Text("Body Background").frame(minWidth: 150, alignment: .leading)
+                    ColourPickerView(colour: $colourScheme.bodyBackground)
+                }.padding(.leading)
+                HStack {
+                    Text("Body Test").frame(minWidth: 150, alignment: .leading)
+                    ColourPickerView(colour: $colourScheme.bodyText)
+                }.padding(.leading)
             }
             Spacer()
             HStack {
@@ -83,6 +64,7 @@ struct ConfigurationView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                        .shadow(radius: Constants.BigShadowRadius)
                 } ).buttonStyle(PlainButtonStyle())
             }
         }.frame(maxWidth: .infinity, maxHeight: .infinity).background(colourScheme.bodyBackground).padding()

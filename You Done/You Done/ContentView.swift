@@ -38,14 +38,15 @@ struct ContentView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                                .shadow(radius: Constants.BigShadowRadius)
                         }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
                     }.padding()
                     HStack {
                         Button(action: { tab = "status" }) {
-                            Text("Status").foregroundColor(colourScheme.headerText).underline(tab == "status").bold(tab == "status")
+                            Text("Status").foregroundColor(colourScheme.headerText).underline(tab == "status").bold(tab == "status").shadow(radius: Constants.ShadowRadius)
                         }.buttonStyle(PlainButtonStyle())
                         Button(action: { tab = "integrations" }) {
-                            Text("Integrations").foregroundColor(colourScheme.headerText).underline(tab == "integrations").bold(tab == "integrations")
+                            Text("Integrations").foregroundColor(colourScheme.headerText).underline(tab == "integrations").bold(tab == "integrations").shadow(radius: Constants.ShadowRadius)
                         }.buttonStyle(PlainButtonStyle())
                         Spacer()
                     }.padding(.leading).visibility(hidden: .constant(configure || integrationName != nil))

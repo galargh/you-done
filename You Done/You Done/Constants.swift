@@ -15,6 +15,9 @@ class Constants {
     static let ButtonHeight: CGFloat? = 22.0
     static let ButtonLeadingPadding: CGFloat? = 4.0
     
+    static let BigShadowRadius: CGFloat = 5.0
+    static let ShadowRadius: CGFloat = 1.0
+    
     static let BigButtonWidth: CGFloat? = 32.0
     static let BigButtonHeight: CGFloat? = 32.0
     static let BigButtonLeadingPadding: CGFloat? = 12.0

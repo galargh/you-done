@@ -35,6 +35,7 @@ struct IntegrationConfigurationView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                            .shadow(radius: Constants.BigShadowRadius)
                     } ).buttonStyle(PlainButtonStyle())
                 }
             }.padding(.leading)

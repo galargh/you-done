@@ -24,6 +24,7 @@ struct IntegrationView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                        .shadow(radius: Constants.ShadowRadius)
                 } ).buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
             } else if (integration.state == .available) {
                 Button(action: {
@@ -40,6 +41,7 @@ struct IntegrationView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                        .shadow(radius: Constants.ShadowRadius)
                 } ).disabled(integration.oauth2.isAuthorizing).buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
             } else {
                 Button(action: {}) {}.visibility(hidden: .constant(true))

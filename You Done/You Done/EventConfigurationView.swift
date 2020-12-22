@@ -93,7 +93,7 @@ struct EventConfigurationView: View {
                         }
                         TextField("", text: $eventConfiguration.pattern, onCommit: commit)
                             .textFieldStyle(PlainTextFieldStyle())
-                    }
+                    }.shadow(radius: Constants.ShadowRadius)
                         .padding(.vertical, vertical)
                         .padding(.horizontal, horizontal)
                         .background(colourScheme.headerBackground)
@@ -112,7 +112,7 @@ struct EventConfigurationView: View {
                         }
                         TextField("", text: $eventConfiguration.template, onCommit: commit)
                             .textFieldStyle(PlainTextFieldStyle())
-                    }
+                    }.shadow(radius: Constants.ShadowRadius)
                         .padding(.vertical, vertical)
                         .padding(.horizontal, horizontal)
                         .background(colourScheme.headerBackground)

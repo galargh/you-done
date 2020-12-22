@@ -70,6 +70,7 @@ struct StatusView: View {
                     Text(dateString)
                         .bold()
                         .font(.system(size: 24.0))
+                        .shadow(radius: Constants.BigShadowRadius)
                         .onTapGesture {
                             showDatePicker.toggle()
                         }
@@ -99,7 +100,7 @@ struct StatusView: View {
                     Button(action: {
                         self.taskStore.taskList.append(contentsOf: [Task(text: "New task")])
                     }) {
-                        Image("Unicorn").resizable().aspectRatio(contentMode: .fit)
+                        Image("Unicorn").resizable().aspectRatio(contentMode: .fit).shadow(radius: Constants.BigShadowRadius)
                     }.buttonStyle(PlainButtonStyle())
                 } else {
                     ScrollView(showsIndicators: taskStore.taskList.count > 8) {
@@ -116,7 +117,7 @@ struct StatusView: View {
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
-                                    
+                                        .shadow(radius: Constants.ShadowRadius)
                                 }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
                             }
                         }
@@ -135,12 +136,14 @@ struct StatusView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                        .shadow(radius: Constants.BigShadowRadius)
                 }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(self.taskStore.taskList.isEmpty)
                 Button(action: {}) {
                     Image("Send")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                        .shadow(radius: Constants.BigShadowRadius)
                 }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(true)
             }
         }.onAppear {

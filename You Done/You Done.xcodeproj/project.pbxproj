@@ -10,6 +10,7 @@
 		68C3745A258A0A5A00F5C5E0 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C37459258A0A5A00F5C5E0 /* StringExtension.swift */; };
 		68C37464258AA76500F5C5E0 /* EventConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C37463258AA76500F5C5E0 /* EventConfigurationView.swift */; };
 		68C3746C2591163A00F5C5E0 /* AlertSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C3746B2591163A00F5C5E0 /* AlertSheet.swift */; };
+		68C3748325926AAA00F5C5E0 /* ColourPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C3748225926AAA00F5C5E0 /* ColourPickerView.swift */; };
 		68CBC6DB257E943C00709835 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DA257E943C00709835 /* AppDelegate.swift */; };
 		68CBC6DD257E943C00709835 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DC257E943C00709835 /* ContentView.swift */; };
 		68CBC6E0257E943C00709835 /* You_Done.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DE257E943C00709835 /* You_Done.xcdatamodeld */; };
@@ -61,6 +62,7 @@
 		68C37459258A0A5A00F5C5E0 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		68C37463258AA76500F5C5E0 /* EventConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventConfigurationView.swift; sourceTree = "<group>"; };
 		68C3746B2591163A00F5C5E0 /* AlertSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSheet.swift; sourceTree = "<group>"; };
+		68C3748225926AAA00F5C5E0 /* ColourPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColourPickerView.swift; sourceTree = "<group>"; };
 		68CBC6D7257E943C00709835 /* You Done.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "You Done.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		68CBC6DA257E943C00709835 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		68CBC6DC257E943C00709835 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 				68CBC7972580F9FF00709835 /* ViewExtension.swift */,
 				68CBC6EA257E943E00709835 /* You_Done.entitlements */,
 				68CBC6DE257E943C00709835 /* You_Done.xcdatamodeld */,
+				68C3748225926AAA00F5C5E0 /* ColourPickerView.swift */,
 			);
 			path = "You Done";
 			sourceTree = "<group>";
@@ -359,6 +362,7 @@
 				68CBC7ED258381DF00709835 /* DateExtension.swift in Sources */,
 				68CBC6DD257E943C00709835 /* ContentView.swift in Sources */,
 				68CBC7A625811B3200709835 /* Task.swift in Sources */,
+				68C3748325926AAA00F5C5E0 /* ColourPickerView.swift in Sources */,
 				68CBC7B925815F3C00709835 /* EventMonitor.swift in Sources */,
 				68CBC7F2258391F600709835 /* Microfutures.swift in Sources */,
 				68CBC7FC2585278300709835 /* NSTextFieldExtension.swift in Sources */,
