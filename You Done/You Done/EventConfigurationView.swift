@@ -100,7 +100,7 @@ struct EventConfigurationView: View {
                         .foregroundColor(colourScheme.headerText)
                         .frame(maxWidth: g.size.width - context.leading)
                         .modifier(Wrapper(context: context))
-                    Text("fill")
+                    Text("create")
                         .padding(.vertical, vertical)
                         .modifier(Wrapper(context: context))
                     HStack {
