@@ -36,8 +36,11 @@ class EventConfiguration: ObservableObject {
         self.template = UserDefaults.standard.string(forKey: "Template: \(name)") ?? template
     }
     
-    func validate() throws {
+    func validatePattern() throws {
         try NSRegularExpression(pattern: pattern)
+    }
+    
+    func validateTemplate() throws {
         let groupsInPattern = try pattern.matches(of: NSRegularExpression.forGroupInPattern.pattern).map { match in
             String(pattern[Range(match.range(at: 1), in: pattern)!])
         }
@@ -50,7 +53,11 @@ class EventConfiguration: ObservableObject {
         if (!diff.isEmpty) {
             throw NSError(domain: NSCocoaErrorDomain, code: NSFormattingError, userInfo: ["NSInvalidValue": template])
         }
-        
+    }
+    
+    func validate() throws {
+        try validatePattern()
+        try validateTemplate()
     }
     
     func commit() {
