@@ -9,8 +9,7 @@ import SwiftUI
 
 struct StatusView: View {
     @EnvironmentObject var integrationStore: IntegrationStore
-    @Binding var date: Date
-    @ObservedObject var taskList: TaskList
+    @EnvironmentObject var taskStore: TaskStore
 
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -23,43 +22,40 @@ struct StatusView: View {
     
 
     private func setDate(_ date: Date) {
-        self.date = date
-        self.taskList.reset()
+        self.taskStore.setDate(date)
         self.showDatePicker = false
         refreshDateString()
         loadTaskList()
     }
     
     private func refreshDateString() {
-        if (date.toDay() == Date.today) {
+        if (self.taskStore.date == Date.today) {
             self.dateString = "Today"
-        } else if (date.toDay() == Date.yesterday) {
+        } else if (self.taskStore.date == Date.yesterday) {
             self.dateString = "Yesterday"
         } else {
-            self.dateString = dateFormatter.string(from: date)
+            self.dateString = dateFormatter.string(from: self.taskStore.date)
         }
     }
     
     @State private var alert: String?
     @State private var isPulling = false
-    private func loadTaskList(force: Bool = true) {
-        if (taskList.isEmpty || force) {
-            let deadline = DispatchTime.now() + 1
-            var errorList: [Error] = []
-            isPulling = true
-            integrationStore.all(forState: .installed).map { $0.pull(date: date) }.subscribe(onNext: { pulledTaskList in
-                taskList.append(contentsOf: pulledTaskList)
-            }, onError: { error in
-                errorList.append(error)
-            }, onFinal: {
-                DispatchQueue.main.asyncAfter(deadline: deadline) {
-                    isPulling = false
-                }
-                if (!errorList.isEmpty) {
-                    self.alert = errorList.map { $0.localizedDescription }.joined(separator: "\n")
-                }
-            })
-        }
+    private func loadTaskList() {
+        let deadline = DispatchTime.now() + 1
+        var errorList: [Error] = []
+        isPulling = true
+        integrationStore.all(forState: .installed).map { $0.pull(date: taskStore.date) }.subscribe(onNext: { pulledTaskList in
+            taskStore.taskList.append(contentsOf: pulledTaskList)
+        }, onError: { error in
+            errorList.append(error)
+        }, onFinal: {
+            DispatchQueue.main.asyncAfter(deadline: deadline) {
+                isPulling = false
+            }
+            if (!errorList.isEmpty) {
+                self.alert = errorList.map { $0.localizedDescription }.joined(separator: "\n")
+            }
+        })
     }
     
     private var foreverAnimation: Animation {
@@ -82,14 +78,14 @@ struct StatusView: View {
                             arrowEdge: .bottom
                         ) {
                             DatePicker("?", selection: Binding(
-                                get: { return self.date },
+                                get: { return self.taskStore.date },
                                 set: { setDate($0) }
                             ), in: ...Date(), displayedComponents: .date).datePickerStyle(GraphicalDatePickerStyle())
                                 .labelsHidden()
                         }
                     Spacer()
                     Button(action: {
-                        loadTaskList(force: true)
+                        loadTaskList()
                     }) {
                         Image(isPulling ? "Sync" : "Sync Colour")
                             .resizable()
@@ -100,22 +96,22 @@ struct StatusView: View {
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling)
                     .modifier(AlertSheet(alert: $alert))
                 }
-                if (self.taskList.taskList.isEmpty) {
+                if (self.taskStore.taskList.isEmpty) {
                     Button(action: {
-                        self.taskList.append(contentsOf: [Task(text: "New task")])
+                        self.taskStore.taskList.append(contentsOf: [Task(text: "New task")])
                     }) {
                         Image("Unicorn").resizable().aspectRatio(contentMode: .fit)
                     }.buttonStyle(PlainButtonStyle())
                 } else {
-                    ScrollView(showsIndicators: taskList.taskList.count > 8) {
+                    ScrollView(showsIndicators: taskStore.taskList.count > 8) {
                         VStack {
-                            ForEach(self.taskList.taskList) { task in
+                            ForEach(self.taskStore.taskList.items) { task in
                                 TaskView(task: task)
                             }
                             HStack {
                                 Spacer()
                                 Button(action: {
-                                    self.taskList.append(contentsOf: [Task(text: "New task")])
+                                    self.taskStore.taskList.append(contentsOf: [Task(text: "New task")])
                                 }) {
                                     Image("Add Colour")
                                         .resizable()
@@ -134,13 +130,13 @@ struct StatusView: View {
                 Button(action: {
                     let pasteBoard = NSPasteboard.general
                     pasteBoard.clearContents()
-                    pasteBoard.writeObjects([taskList.toString(title: dateString) as NSString])
+                    pasteBoard.writeObjects([self.taskStore.taskList.toString(title: dateString) as NSString])
                 }) {
-                    Image(self.taskList.taskList.isEmpty ? "File" : "File Colour")
+                    Image(self.taskStore.taskList.isEmpty ? "File" : "File Colour")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(self.taskList.taskList.isEmpty)
+                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(self.taskStore.taskList.isEmpty)
                 Button(action: {}) {
                     Image("Send")
                         .resizable()
@@ -150,7 +146,6 @@ struct StatusView: View {
             }
         }.onAppear {
             refreshDateString()
-            loadTaskList(force: false)
         }
     }
 }

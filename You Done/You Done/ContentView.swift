@@ -13,9 +13,6 @@ struct ContentView: View {
     @EnvironmentObject var colourScheme: ColourScheme
     @State var tab: String = "status"
     @State var configure: Bool = false
-    @State var date: Date = Date()
-    
-    private var taskList = TaskList()
     
     var body: some View {
         ZStack {
@@ -55,7 +52,7 @@ struct ContentView: View {
                 }
                 ZStack {
                     if (tab == "status") {
-                        StatusView(date: $date, taskList: taskList).padding()
+                        StatusView().padding()
                     } else if (tab == "integrations") {
                         IntegrationListView(integrationName: $integrationName).padding()
                     }

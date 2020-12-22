@@ -6,30 +6,65 @@
 //
 
 import SwiftUI
+import Combine
 
-class TaskList: ObservableObject {
-    @Published var taskList: [Task] = []
+extension Dictionary {
+    mutating func getOrSet(_ key: Key, defaultValue: () -> Value) -> Value {
+        if let value = self[key] {
+            return value
+        } else {
+            self[key] = defaultValue()
+            return self[key]!
+        }
+    }
+}
+
+class TaskStore: ObservableObject {
+    private var taskListByDate: [Date:TaskList] = [:]
+    @Published var date: Date
+    @Published var taskList: TaskList
+    
+    private var taskListObserver: AnyCancellable? = nil
+    
+    init(date: Date = Date()) {
+        self.date = date.toDay()
+        self.taskList = taskListByDate.getOrSet(date.toDay(), defaultValue: { TaskList() })
+        self.taskListObserver = taskList.objectWillChange.sink(receiveValue: { _ in self.objectWillChange.send() })
+    }
+    
+    func setDate(_ date: Date) {
+        self.date = date.toDay()
+        self.taskList = taskListByDate.getOrSet(date.toDay(), defaultValue: { TaskList() })
+        self.taskListObserver = taskList.objectWillChange.sink(receiveValue: { _ in self.objectWillChange.send() })
+    }
+}
+
+class TaskList: ObservableObject, Equatable {
+    static func == (lhs: TaskList, rhs: TaskList) -> Bool {
+        return lhs.items == rhs.items
+    }
+    
+    @Published var items: [Task] = []
+    
+    var count: Int { items.count }
+    var isEmpty: Bool { items.isEmpty }
         
     func append(contentsOf list: [Task]) {
         DispatchQueue.main.async {
-            var newTaskList = self.taskList
+            var newTaskList = self.items
             newTaskList.append(contentsOf: list)
-            self.taskList = newTaskList.unique()
+            self.items = newTaskList.unique()
         }
     }
     
     func reset() {
         DispatchQueue.main.async {
-            self.taskList = []
+            self.items = []
         }
     }
     
-    var isEmpty: Bool {
-        taskList.isEmpty
-    }
-    
     func toString(title: String) -> String {
-        "\(title):\n\(taskList.filter { task in !task.deleted }.map { task in "- \(task.text)" }.joined(separator: "\n"))"
+        "\(title):\n\(items.filter { task in !task.deleted }.map { task in "- \(task.text)" }.joined(separator: "\n"))"
     }
 }
 

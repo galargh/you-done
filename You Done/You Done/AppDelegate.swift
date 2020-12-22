@@ -16,6 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var localEventMonitor: LocalEventMonitor!
     var globalEventMonitor: GlobalEventMonitor!
     var integrationStore: IntegrationStore!
+    var taskStore: TaskStore!
     var colourScheme: ColourScheme!
 
 
@@ -25,13 +26,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let contentView = ContentView().environment(\.managedObjectContext, persistentContainer.viewContext)
 
         integrationStore = IntegrationStore()
+        taskStore = TaskStore()
         colourScheme = ColourScheme()
         
         // Create the popover and set the content view.
         popover = NSPopover()
         popover.contentSize = NSSize(width: 600, height: 500)
         //popover.behavior = .transient
-        popover.contentViewController = NSHostingController(rootView: contentView.environmentObject(integrationStore).environmentObject(colourScheme))
+        popover.contentViewController = NSHostingController(rootView: contentView.environmentObject(integrationStore).environmentObject(taskStore).environmentObject(colourScheme))
 
         // Create the status item
         statusItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
