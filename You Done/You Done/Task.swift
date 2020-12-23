@@ -46,7 +46,7 @@ class TaskList: ObservableObject, Equatable {
     
     @Published var items: [Task] = []
     
-    var count: Int { items.count }
+    func count(deleted: Bool) ->  Int { items.filter { $0.deleted == deleted }.count }
     var isEmpty: Bool { items.isEmpty }
         
     func append(contentsOf list: [Task]) {

@@ -10,6 +10,8 @@ import SwiftUI
 struct StatusView: View {
     @EnvironmentObject var integrationStore: IntegrationStore
     @EnvironmentObject var taskStore: TaskStore
+    
+    @Binding var showDeleted: Bool
 
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -66,85 +68,107 @@ struct StatusView: View {
     var body: some View {
         VStack {
             Group {
-                HStack {
-                    Text(dateString)
-                        .bold()
-                        .font(.system(size: 24.0))
-                        .shadow(radius: Constants.BigShadowRadius)
-                        .onTapGesture {
-                            showDatePicker.toggle()
-                        }
-                        .popover(
-                            isPresented: $showDatePicker,
-                            arrowEdge: .bottom
-                        ) {
-                            DatePicker("?", selection: Binding(
-                                get: { return self.taskStore.date },
-                                set: { setDate($0) }
-                            ), in: ...Date(), displayedComponents: .date).datePickerStyle(GraphicalDatePickerStyle())
-                                .labelsHidden()
-                        }
-                    Spacer()
-                    Button(action: {
-                        loadTaskList()
-                    }) {
-                        Image(isPulling ? "Sync" : "Sync Colour")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .rotationEffect(Angle(degrees: isPulling ? 360 : 0.0))
-                            .animation(isPulling ? foreverAnimation : .default)
-                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling)
+                if (!showDeleted) {
+                    HStack {
+                        Text(dateString)
+                            .bold()
+                            .font(.system(size: 24.0))
+                            .shadow(radius: Constants.BigShadowRadius)
+                            .onTapGesture {
+                                showDatePicker.toggle()
+                            }
+                            .popover(
+                                isPresented: $showDatePicker,
+                                arrowEdge: .bottom
+                            ) {
+                                DatePicker("?", selection: Binding(
+                                    get: { return self.taskStore.date },
+                                    set: { setDate($0) }
+                                ), in: ...Date(), displayedComponents: .date).datePickerStyle(GraphicalDatePickerStyle())
+                                    .labelsHidden()
+                            }
+                        Spacer()
+                        Button(action: {
+                            showDeleted.toggle()
+                        }) {
+                            Image(self.taskStore.taskList.count(deleted: true) == 0 ? "Dump" : "Dump Colour")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                        }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
+                        Button(action: {
+                            loadTaskList()
+                        }) {
+                            Image(isPulling ? "Sync" : "Sync Colour")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .rotationEffect(Angle(degrees: isPulling ? 360 : 0.0))
+                                .animation(isPulling ? foreverAnimation : .default)
+                                .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                        }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling)
+                    }
+                } else {
+                    HStack {
+                        Text("Bin")
+                            .bold()
+                            .font(.system(size: 24.0))
+                            .shadow(radius: Constants.BigShadowRadius)
+                        Spacer()
+                    }
                 }
-                if (self.taskStore.taskList.isEmpty) {
+                if (self.taskStore.taskList.count(deleted: false) == 0 && !showDeleted) {
                     Button(action: {
                         self.taskStore.taskList.append(contentsOf: [Task(text: "New task")])
                     }) {
                         Image("Unicorn").resizable().aspectRatio(contentMode: .fit).shadow(radius: Constants.BigShadowRadius)
                     }.buttonStyle(PlainButtonStyle())
                 } else {
-                    ScrollView(showsIndicators: taskStore.taskList.count > 8) {
+                    ScrollView(showsIndicators: taskStore.taskList.count(deleted: showDeleted) > 8) {
                         VStack {
                             ForEach(self.taskStore.taskList.items) { task in
-                                TaskView(task: task)
+                                TaskView(task: task, showDeleted: $showDeleted)
                             }
-                            HStack {
-                                Spacer()
-                                Button(action: {
-                                    self.taskStore.taskList.append(contentsOf: [Task(text: "New task")])
-                                }) {
-                                    Image("Add Colour")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
-                                        .shadow(radius: Constants.ShadowRadius)
-                                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
+                            if (!showDeleted) {
+                                HStack {
+                                    Spacer()
+                                    Button(action: {
+                                        self.taskStore.taskList.append(contentsOf: [Task(text: "New task")])
+                                    }) {
+                                        Image("Add Colour")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                                            .shadow(radius: Constants.ShadowRadius)
+                                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
+                                }
                             }
                         }
                     }
                 }
                 Spacer()
             }
-            HStack {
-                Spacer()
-                Button(action: {
-                    let pasteBoard = NSPasteboard.general
-                    pasteBoard.clearContents()
-                    pasteBoard.writeObjects([self.taskStore.taskList.toString(title: dateString) as NSString])
-                }) {
-                    Image(self.taskStore.taskList.isEmpty ? "File" : "File Colour")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                        .shadow(radius: Constants.BigShadowRadius)
-                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(self.taskStore.taskList.isEmpty)
-                Button(action: {}) {
-                    Image("Send")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                        .shadow(radius: Constants.BigShadowRadius)
-                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(true)
+            if (!showDeleted) {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        let pasteBoard = NSPasteboard.general
+                        pasteBoard.clearContents()
+                        pasteBoard.writeObjects([self.taskStore.taskList.toString(title: dateString) as NSString])
+                    }) {
+                        Image(self.taskStore.taskList.isEmpty ? "File" : "File Colour")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                            .shadow(radius: Constants.BigShadowRadius)
+                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(self.taskStore.taskList.isEmpty)
+                    Button(action: {}) {
+                        Image("Send")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                            .shadow(radius: Constants.BigShadowRadius)
+                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(true)
+                }
             }
         }.onAppear {
             refreshDateString()
