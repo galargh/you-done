@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TaskView: View {
     @EnvironmentObject var taskStore: TaskStore
+    @EnvironmentObject var colourScheme: ColourScheme
     @ObservedObject var task: Task
     @State var isEditing = false
     @Binding var showDeleted: Bool
@@ -20,9 +21,9 @@ struct TaskView: View {
                     if (task.deleted) {
                         Text(task.text)
                     } else {
-                        TextField("", text: $task.text, onEditingChanged: { isEditing = $0 }).textFieldStyle(PlainTextFieldStyle())
+                        TextField("", text: $task.text, onEditingChanged: { isEditing = $0 }).textFieldStyle(PlainTextFieldStyle()).colorMultiply(colourScheme.headerText).padding(5).background(colourScheme.headerBackground).foregroundColor(colourScheme.headerText)
                     }
-                }.shadow(radius: Constants.ShadowRadius)
+                }
                 Spacer()
                 if (task.deleted) {
                     Button(action: {

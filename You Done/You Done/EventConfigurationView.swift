@@ -86,14 +86,14 @@ struct EventConfigurationView: View {
                         .modifier(Wrapper(context: context))
                     HStack {
                         TextField("", text: $eventConfiguration.pattern, onCommit: commit)
-                            .textFieldStyle(PlainTextFieldStyle())
+                            .textFieldStyle(PlainTextFieldStyle()).colorMultiply(colourScheme.headerText)
                         if (!eventConfiguration.isPatternValid) {
                             Image("Caution Colour")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 16.0, height: 16.0)
                         }
-                    }.shadow(radius: Constants.ShadowRadius)
+                    }
                         .padding(.vertical, vertical)
                         .padding(.horizontal, horizontal)
                         .background(colourScheme.headerBackground)
@@ -105,14 +105,14 @@ struct EventConfigurationView: View {
                         .modifier(Wrapper(context: context))
                     HStack {
                         TextField("", text: $eventConfiguration.template, onCommit: commit)
-                            .textFieldStyle(PlainTextFieldStyle())
+                            .textFieldStyle(PlainTextFieldStyle()).colorMultiply(colourScheme.headerText)
                         if (!eventConfiguration.isTemplateValid) {
                             Image("Caution Colour")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 16.0, height: 16.0)
                         }
-                    }.shadow(radius: Constants.ShadowRadius)
+                    }
                         .padding(.vertical, vertical)
                         .padding(.horizontal, horizontal)
                         .background(colourScheme.headerBackground)
