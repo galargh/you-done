@@ -40,6 +40,7 @@ struct TaskView: View {
                             .shadow(radius: Constants.ShadowRadius)
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
                 } else {
+                    /*
                     Button(action: {}) {
                         Image(isEditing ? "Floppy Colour" : "Floppy")
                             .resizable()
@@ -47,6 +48,7 @@ struct TaskView: View {
                             .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                             .shadow(radius: Constants.ShadowRadius)
                     }.buttonStyle(PlainButtonStyle()).disabled(!isEditing).padding(.leading, Constants.ButtonLeadingPadding)
+                    */
                     Button(action: {
                         self.task.deleted = true
                         self.taskStore.objectWillChange.send()
