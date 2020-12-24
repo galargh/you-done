@@ -39,7 +39,6 @@ struct IntegrationConfigurationView: View {
                     } ).buttonStyle(PlainButtonStyle())
                 }
             }.padding(.leading)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity).background(colourScheme.bodyBackground).padding()
+        }.padding().frame(maxWidth: .infinity, maxHeight: .infinity).background(colourScheme.bodyBackground)
     }
 }

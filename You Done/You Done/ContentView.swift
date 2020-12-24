@@ -13,7 +13,7 @@ struct ContentView: View {
     @EnvironmentObject var colourScheme: ColourScheme
     @State var tab: String = "status"
     @State var configure: Bool = false
-    @State var showDeleted: Bool = false
+    @State var showBin: Bool = false
     
     var body: some View {
         ZStack {
@@ -29,14 +29,14 @@ struct ContentView: View {
                         }
                         Spacer()
                         Button(action: {
-                            if (!configure && !showDeleted && integrationName == nil) { configure = true }
+                            if (!configure && !showBin && integrationName == nil) { configure = true }
                             else {
                                 configure = false
                                 integrationName = nil
-                                showDeleted = false
+                                showBin = false
                             }
                         }) {
-                            Image((!configure && !showDeleted && integrationName == nil) ? "Gears Colour" : "Turn Back Colour")
+                            Image((!configure && !showBin && integrationName == nil) ? "Gears Colour" : "Turn Back Colour")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
@@ -55,7 +55,7 @@ struct ContentView: View {
                 }
                 ZStack {
                     if (tab == "status") {
-                        StatusView(showDeleted: $showDeleted).padding()
+                        StatusView(showBin: $showBin).padding()
                     } else if (tab == "integrations") {
                         IntegrationListView(integrationName: $integrationName).padding()
                     }

@@ -163,12 +163,18 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
         }
     }
     
-    func pull(date: Date = Date()) -> Future<[Task]> {
+    func pull(date: Date = Date()) -> Future<[EventData]> {
         return Future { completion in
             completion(.success([]))
         }
     }
 
+}
+
+struct EventData {
+    var id: String
+    var text: String
+    var date: Date
 }
 
 class GithubIntegration: Integration {
@@ -227,10 +233,10 @@ class GithubIntegration: Integration {
         }
     }
     
-    override func pull(date: Date = Date()) -> Future<[Task]> {
+    override func pull(date: Date = Date()) -> Future<[EventData]> {
         return events(date: date).map { eventList in
             return try eventList.map { event in
-                return try Task(id: event.toID(), text: event.toString()!)
+                return try EventData(id: event.toID(), text: event.toString()!, date: event.toDate())
             }
         }
     }
@@ -395,11 +401,11 @@ class GoogleCalendarIntegration: Integration {
         }
     }
     
-    override func pull(date: Date = Date()) -> Future<[Task]> {
+    override func pull(date: Date = Date()) -> Future<[EventData]> {
         return events(date: date).map { eventList in
             return try eventList.map { event in
                 let text = try event.toString(email: self.email!)!
-                return Task(id: text, text: text)
+                return EventData(id: event.toID(), text: text, date: event.toDate())
             }
         }
     }
@@ -414,6 +420,8 @@ class GoogleCalendarIntegration: Integration {
         var summary: String
         var creator: User
         var organizer: User
+        var start: StartEnd
+        var end: StartEnd
         var attendees: [Attendee]?
         
         func toString(email: String) throws -> String? {
@@ -427,6 +435,20 @@ class GoogleCalendarIntegration: Integration {
                 return nil
             }
         }
+        
+        func toDate() -> Date {
+            return ISO8601DateFormatter().date(from: start.date ?? start.dateTime!)!
+        }
+        
+        func toID() -> String {
+            return id
+        }
+    }
+    
+    struct StartEnd: Codable {
+        var date: String?
+        var dateTime: String?
+        var timeZone: String?
     }
     
     struct User: Codable {

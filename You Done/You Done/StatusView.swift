@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct StatusView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var integrationStore: IntegrationStore
     @EnvironmentObject var taskStore: TaskStore
     
-    @Binding var showDeleted: Bool
+    @Binding var showBin: Bool
 
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -46,8 +47,8 @@ struct StatusView: View {
         let deadline = DispatchTime.now() + 1
         var errorList: [Error] = []
         isPulling = true
-        integrationStore.all(forState: .installed).map { $0.pull(date: taskStore.date) }.subscribe(onNext: { pulledTaskList in
-            taskStore.taskList.append(contentsOf: pulledTaskList)
+        integrationStore.all(forState: .installed).map { $0.pull(date: taskStore.date) }.subscribe(onNext: { pulledEventList in
+            taskStore.taskList.append(contentsOf: pulledEventList, in: managedObjectContext)
         }, onError: { error in
             errorList.append(error)
         }, onFinal: {
@@ -67,87 +68,86 @@ struct StatusView: View {
 
     var body: some View {
         VStack {
-            Group {
-                if (!showDeleted) {
-                    HStack {
-                        Text(dateString)
-                            .bold()
-                            .font(.system(size: 24.0))
-                            .shadow(radius: Constants.BigShadowRadius)
-                            .onTapGesture {
-                                showDatePicker.toggle()
-                            }
-                            .popover(
-                                isPresented: $showDatePicker,
-                                arrowEdge: .bottom
-                            ) {
-                                DatePicker("?", selection: Binding(
-                                    get: { return self.taskStore.date },
-                                    set: { setDate($0) }
-                                ), in: ...Date(), displayedComponents: .date).datePickerStyle(GraphicalDatePickerStyle())
-                                    .labelsHidden()
-                            }
-                        Spacer()
-                        Button(action: {
-                            showDeleted.toggle()
-                        }) {
-                            Image(self.taskStore.taskList.count(deleted: true) == 0 ? "Dump" : "Dump Colour")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                        }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
-                        Button(action: {
-                            loadTaskList()
-                        }) {
-                            Image(isPulling ? "Sync" : "Sync Colour")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .rotationEffect(Angle(degrees: isPulling ? 360 : 0.0))
-                                .animation(isPulling ? foreverAnimation : .default)
-                                .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                        }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling)
-                    }
-                } else {
-                    HStack {
-                        Text("Bin")
-                            .bold()
-                            .font(.system(size: 24.0))
-                            .shadow(radius: Constants.BigShadowRadius)
-                        Spacer()
-                    }
-                }
-                if (self.taskStore.taskList.count(deleted: false) == 0 && !showDeleted) {
+            if (!showBin) {
+                HStack {
+                    Text(dateString)
+                        .bold()
+                        .font(.system(size: 24.0))
+                        .shadow(radius: Constants.BigShadowRadius)
+                        .onTapGesture {
+                            showDatePicker.toggle()
+                        }
+                        .popover(
+                            isPresented: $showDatePicker,
+                            arrowEdge: .bottom
+                        ) {
+                            DatePicker("?", selection: Binding(
+                                get: { return self.taskStore.date },
+                                set: { setDate($0) }
+                            ), in: ...Date(), displayedComponents: .date).datePickerStyle(GraphicalDatePickerStyle())
+                                .labelsHidden()
+                        }
+                    Spacer()
                     Button(action: {
-                        self.taskStore.taskList.append(contentsOf: [Task(text: "New task")])
+                        showBin.toggle()
                     }) {
-                        Image("Unicorn").resizable().aspectRatio(contentMode: .fit).shadow(radius: Constants.BigShadowRadius)
-                    }.buttonStyle(PlainButtonStyle())
-                } else {
-                    ScrollView(showsIndicators: taskStore.taskList.count(deleted: showDeleted) > 8) {
-                        VStack {
-                            ForEach(self.taskStore.taskList.items) { task in
-                                TaskView(task: task, showDeleted: $showDeleted)
-                            }
-                            if (!showDeleted) {
-                                HStack {
-                                    Spacer()
-                                    Button(action: {
-                                        self.taskStore.taskList.append(contentsOf: [Task(text: "New task")])
-                                    }) {
-                                        Image("Add Colour")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
-                                            .shadow(radius: Constants.ShadowRadius)
-                                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
-                                }
+                        Image(self.taskStore.taskList.count(binned: true) == 0 ? "Dump" : "Dump Colour")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
+                    Button(action: {
+                        loadTaskList()
+                    }) {
+                        Image(isPulling ? "Sync" : "Sync Colour")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .shadow(radius: Constants.ShadowRadius)
+                            .rotationEffect(Angle(degrees: isPulling ? 360 : 0.0))
+                            .animation(isPulling ? foreverAnimation : .default)
+                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
+                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling)
+                }
+            } else {
+                HStack {
+                    Text("Bin")
+                        .bold()
+                        .font(.system(size: 24.0))
+                        .shadow(radius: Constants.BigShadowRadius)
+                    Spacer()
+                }
+            }
+            if (self.taskStore.taskList.count(binned: false) == 0 && !showBin) {
+                Button(action: {
+                    self.taskStore.taskList.append(contentsOf: [EventData(id: UUID().description, text: "New task", date: taskStore.date)], in: managedObjectContext)
+                }) {
+                    Image("Unicorn").resizable().aspectRatio(contentMode: .fit).shadow(radius: Constants.BigShadowRadius)
+                }.buttonStyle(PlainButtonStyle())
+            } else {
+                ScrollView(showsIndicators: taskStore.taskList.count(binned: showBin) > 8) {
+                    VStack {
+                        ForEach(self.taskStore.taskList.items) { task in
+                            TaskView(task: task, showBin: $showBin)
+                        }
+                        if (!showBin) {
+                            HStack {
+                                Spacer()
+                                Button(action: {
+                                    self.taskStore.taskList.append(contentsOf: [EventData(id: UUID().description, text: "New task", date: taskStore.date)], in: managedObjectContext)
+                                }) {
+                                    Image("Add Colour")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
+                                        .shadow(radius: Constants.ShadowRadius)
+                                }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
                             }
                         }
                     }
                 }
-                Spacer()
             }
-            if (!showDeleted) {
+            Spacer()
+            if (!showBin) {
                 HStack {
                     Spacer()
                     Button(action: {

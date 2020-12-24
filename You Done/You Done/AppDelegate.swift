@@ -27,7 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let contentView = ContentView().environment(\.managedObjectContext, persistentContainer.viewContext)
 
         integrationStore = IntegrationStore()
-        taskStore = TaskStore()
+        taskStore = TaskStore(context: persistentContainer.viewContext)
         colourScheme = ColourScheme()
         alertContext = AlertContext()
         
@@ -80,6 +80,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 popover.performClose(sender)
                 globalEventMonitor.stop()
                 localEventMonitor.stop()
+                do { try persistentContainer.viewContext.save() } catch { print("Failed to save context \(error)") }
             } else {
                 popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
                 popover.contentViewController?.view.window?.becomeKey()

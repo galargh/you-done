@@ -67,7 +67,7 @@ struct ConfigurationView: View {
                         .shadow(radius: Constants.BigShadowRadius)
                 } ).buttonStyle(PlainButtonStyle())
             }
-        }.frame(maxWidth: .infinity, maxHeight: .infinity).background(colourScheme.bodyBackground).padding()
+        }.padding().frame(maxWidth: .infinity, maxHeight: .infinity).background(colourScheme.bodyBackground)
     }
 }
 

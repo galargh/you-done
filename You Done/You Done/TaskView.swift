@@ -12,24 +12,24 @@ struct TaskView: View {
     @EnvironmentObject var colourScheme: ColourScheme
     @ObservedObject var task: Task
     @State var isEditing = false
-    @Binding var showDeleted: Bool
+    @Binding var showBin: Bool
     
     var body: some View {
-        if (task.deleted == showDeleted) {
+        if (task.binned == showBin) {
             HStack {
                 HStack {
-                    if (task.deleted) {
-                        Text(task.text)
+                    if (task.binned) {
+                        Text(task.text!)
                     } else {
-                        TextField("", text: $task.text, onEditingChanged: { isEditing = $0 }).textFieldStyle(PlainTextFieldStyle()).colorMultiply(colourScheme.headerText).padding(5).background(colourScheme.headerBackground).foregroundColor(colourScheme.headerText)
+                        TextField("", text: $task.text.bound, onEditingChanged: { isEditing = $0 }).textFieldStyle(PlainTextFieldStyle()).colorMultiply(colourScheme.headerText).padding(5).background(colourScheme.headerBackground).foregroundColor(colourScheme.headerText)
                     }
                 }
                 Spacer()
-                if (task.deleted) {
+                if (task.binned) {
                     Button(action: {
-                        self.task.deleted = false
-                        if (self.taskStore.taskList.count(deleted: true) == 0) {
-                            showDeleted = false
+                        self.task.binned = false
+                        if (self.taskStore.taskList.count(binned: true) == 0) {
+                            showBin = false
                         }
                         self.taskStore.objectWillChange.send()
                     }) {
@@ -50,7 +50,7 @@ struct TaskView: View {
                     }.buttonStyle(PlainButtonStyle()).disabled(!isEditing).padding(.leading, Constants.ButtonLeadingPadding)
                     */
                     Button(action: {
-                        self.task.deleted = true
+                        self.task.binned = true
                         self.taskStore.objectWillChange.send()
                     }) {
                         Image("Remove Colour")
