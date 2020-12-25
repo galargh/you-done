@@ -9,12 +9,14 @@ import SwiftUI
 
 struct ColourPickerView: View {
     @Binding var colour: Color
+    var onPick: (Color) -> Void = { _ in }
     
     var body: some View {
         HStack {
             ForEach(Constants.Colours, id: \.self.description) { colour in
                 Button(action: {
                     self.colour = colour
+                    onPick(colour)
                 }, label: {
                     ZStack {
                         Rectangle().fill(colour).tag(colour)

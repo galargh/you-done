@@ -43,10 +43,74 @@ class Constants {
     ]
 }
 
+extension Color {
+    func toUserDefaults(forKey key: String) {
+        UserDefaults.standard.setValue(description, forKey: key)
+    }
+    
+    static func fromUserDefaults(forKey key: String) -> Color? {
+        guard let description = UserDefaults.standard.string(forKey: key) else { return nil }
+        return Color.fromDescription(description)
+    }
+    
+    static func fromDescription(_ description: String) -> Color? {
+        switch description {
+        case "AccentColorProvider()":
+            return Color.accentColor
+        case "black":
+            return Color.black
+        case "blue":
+            return Color.blue
+        case "gray":
+            return Color.gray
+        case "green":
+            return Color.green
+        case "orange":
+            return Color.orange
+        case "pink":
+            return Color.pink
+        case "primary":
+            return Color.primary
+        case "purple":
+            return Color.purple
+        case "red":
+            return Color.red
+        case "secondary":
+            return Color.secondary
+        case "white":
+            return Color.white
+        case "yellow":
+            return Color.yellow
+        case _ where description.starts(with: "#"):
+            let components = Array(description).map { String($0) }
+            let r = Double(Int(components[1] + components[2], radix: 16)!) / 255.0
+            let g = Double(Int(components[3] + components[4], radix: 16)!) / 255.0
+            let b = Double(Int(components[5] + components[6], radix: 16)!) / 255.0
+            let o = Double(Int(components[7] + components[8], radix: 16)!) / 255.0
+            return Color(.sRGB, red: r, green: g, blue: b, opacity: o)
+        default:
+            return nil
+        }
+    }
+}
 
 class ColourScheme: ObservableObject {
-    @Published var headerBackground: Color = Constants.MagicMint
-    @Published var headerText: Color = Constants.DarkPurple
-    @Published var bodyBackground: Color = Constants.WildBlueYonder
-    @Published var bodyText: Color = Constants.White
+    @Published var headerBackground: Color = Color.fromUserDefaults(forKey: "Header Background") ?? Constants.MagicMint
+    @Published var headerText: Color = Color.fromUserDefaults(forKey: "Header Text") ?? Constants.DarkPurple
+    @Published var bodyBackground: Color = Color.fromUserDefaults(forKey: "Body Background") ?? Constants.WildBlueYonder
+    @Published var bodyText: Color = Color.fromUserDefaults(forKey: "Body Text") ?? Constants.White
+    
+    func commitHeaderBackground() {
+        headerBackground.toUserDefaults(forKey: "Header Background")
+    }
+    func commitHeaderText() {
+        headerText.toUserDefaults(forKey: "Header Text")
+    }
+    func commitBodyBackground() {
+        bodyBackground.toUserDefaults(forKey: "Body Background")
+    }
+    func commitBodyText() {
+        bodyText.toUserDefaults(forKey: "Body Text")
+    }
+
 }

@@ -39,19 +39,19 @@ struct ConfigurationView: View {
             ) {
                 HStack {
                     Text("Header Background").frame(minWidth: 150, alignment: .leading)
-                    ColourPickerView(colour: $colourScheme.headerBackground)
+                    ColourPickerView(colour: $colourScheme.headerBackground, onPick: { _ in colourScheme.commitHeaderBackground() })
                 }.padding(.leading)
                 HStack {
                     Text("Header Colour").frame(minWidth: 150, alignment: .leading)
-                    ColourPickerView(colour: $colourScheme.headerText)
+                    ColourPickerView(colour: $colourScheme.headerText, onPick: { _ in colourScheme.commitHeaderText() })
                 }.padding(.leading)
                 HStack {
                     Text("Body Background").frame(minWidth: 150, alignment: .leading)
-                    ColourPickerView(colour: $colourScheme.bodyBackground)
+                    ColourPickerView(colour: $colourScheme.bodyBackground, onPick: { _ in colourScheme.commitBodyBackground() })
                 }.padding(.leading)
                 HStack {
                     Text("Body Test").frame(minWidth: 150, alignment: .leading)
-                    ColourPickerView(colour: $colourScheme.bodyText)
+                    ColourPickerView(colour: $colourScheme.bodyText, onPick: { _ in colourScheme.commitBodyText() })
                 }.padding(.leading)
             }
             Spacer()
