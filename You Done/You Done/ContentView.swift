@@ -39,8 +39,8 @@ struct ContentView: View {
                             Image((!configure && !showBin && integrationName == nil) ? "Gears Colour" : "Turn Back Colour")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                                 .shadow(radius: Constants.BigShadowRadius)
+                                .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                         }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
                     }.padding()
                     HStack {

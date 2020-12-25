@@ -27,8 +27,8 @@ struct AlertSheet: ViewModifier {
                         Image("Check Mark Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                             .shadow(radius: Constants.BigShadowRadius)
+                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                     }
                     .buttonStyle(PlainButtonStyle())
                 }.padding()

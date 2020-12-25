@@ -94,6 +94,7 @@ struct StatusView: View {
                         Image(self.taskStore.taskList.count(binned: true) == 0 ? "Dump" : "Dump Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
+                            .shadow(radius: Constants.BigShadowRadius)
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
                     Button(action: {
@@ -102,7 +103,7 @@ struct StatusView: View {
                         Image(isPulling ? "Sync" : "Sync Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .shadow(radius: Constants.ShadowRadius)
+                            .shadow(radius: Constants.BigShadowRadius)
                             .rotationEffect(Angle(degrees: isPulling ? 360 : 0.0))
                             .animation(isPulling ? foreverAnimation : .default)
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
@@ -138,8 +139,8 @@ struct StatusView: View {
                                     Image("Add Colour")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
-                                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                                         .shadow(radius: Constants.ShadowRadius)
+                                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                                 }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
                             }
                         }
@@ -158,15 +159,15 @@ struct StatusView: View {
                         Image(self.taskStore.taskList.isEmpty ? "File" : "File Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                             .shadow(radius: Constants.BigShadowRadius)
+                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(self.taskStore.taskList.isEmpty)
                     Button(action: {}) {
                         Image("Send")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                             .shadow(radius: Constants.BigShadowRadius)
+                            .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(true)
                 }
             }

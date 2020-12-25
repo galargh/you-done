@@ -20,10 +20,11 @@ struct ColourPickerView: View {
                 }, label: {
                     ZStack {
                         Rectangle().fill(colour).tag(colour)
+                            .shadow(radius: self.colour == colour ? Constants.BigShadowRadius : Constants.ShadowRadius)
                             .frame(
                                 width: self.colour == colour ? Constants.BigButtonWidth : Constants.ButtonWidth,
                                 height: self.colour == colour ? Constants.BigButtonHeight : Constants.ButtonHeight
-                            ).shadow(radius: self.colour == colour ? Constants.BigShadowRadius : Constants.ShadowRadius)
+                            )
                     }.frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                 } ).buttonStyle(PlainButtonStyle())
             }

@@ -23,8 +23,8 @@ struct IntegrationView: View {
                     Image("Gears Colour")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                         .shadow(radius: Constants.ShadowRadius)
+                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                 } ).buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
             } else if (integration.state == .available) {
                 Button(action: {
@@ -40,8 +40,8 @@ struct IntegrationView: View {
                     Image(integration.oauth2.isAuthorizing ? "Download" : "Download Colour")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                         .shadow(radius: Constants.ShadowRadius)
+                        .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                 } ).disabled(integration.oauth2.isAuthorizing).buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
             } else {
                 Button(action: {}) {}.visibility(hidden: .constant(true))

@@ -36,8 +36,8 @@ struct TaskView: View {
                         Image("Add Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                             .shadow(radius: Constants.ShadowRadius)
+                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
                 } else {
                     /*
@@ -56,8 +56,8 @@ struct TaskView: View {
                         Image("Remove Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                             .shadow(radius: Constants.ShadowRadius)
+                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.ButtonLeadingPadding)
                 }
             }

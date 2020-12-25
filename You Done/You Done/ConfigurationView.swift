@@ -27,8 +27,8 @@ struct ConfigurationView: View {
                         Image(activePull ? "Check Mark Colour" : "Cancel Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                             .shadow(radius: Constants.ShadowRadius)
+                            .frame(width: Constants.ButtonWidth, height: Constants.ButtonHeight)
                     } ).buttonStyle(PlainButtonStyle())
                 }.padding(.leading)
             }
@@ -63,8 +63,8 @@ struct ConfigurationView: View {
                     Image("Exit Colour")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                         .shadow(radius: Constants.BigShadowRadius)
+                        .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                 } ).buttonStyle(PlainButtonStyle())
             }
         }.padding().frame(maxWidth: .infinity, maxHeight: .infinity).background(colourScheme.bodyBackground)
