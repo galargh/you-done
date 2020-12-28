@@ -231,17 +231,15 @@ class GithubIntegration: Integration {
             }.flatten().map { $0.reduce([], +) }
         }.map { eventList in
             let day = date.toDay()
-            return try eventList.filter { event in
-                try event.toDate().toDay() == day && event.toString() != nil
+            return eventList.filter { event in
+                event.toDate().toDay() == day
             }
         }
     }
     
     override func pull(date: Date = Date()) -> Future<[EventData]> {
         return events(date: date).map { eventList in
-            return try eventList.map { event in
-                return try EventData(id: event.toID(), text: event.toString()!, date: event.toDate())
-            }.unique()
+            return try eventList.flatMap { try $0.toEventDataList() }.unique()
         }
     }
     
@@ -272,35 +270,47 @@ class GithubIntegration: Integration {
             var state: String
         }
         
-        func toString() throws -> String? {
+        func toEventDataList() throws -> [EventData] {
+            let date = toDate()
+            return try zip(toString(), toID()).compactMap { textOpt, id -> EventData? in
+                if let text = textOpt {
+                    return EventData(id: id, text: text, date: date)
+                } else {
+                    return nil
+                }
+            }
+        }
+        
+        func toString() throws -> [String?] {
             switch type {
             case "PullRequestEvent" where payload.action == "opened":
-                return try GithubIntegration.OpenedPR.parse(payload.pull_request!.title)
+                return try [GithubIntegration.OpenedPR.parse(payload.pull_request!.title)]
             case "PullRequestEvent" where payload.action == "closed":
-                return try GithubIntegration.ClosedPR.parse(payload.pull_request!.title)
+                return try [GithubIntegration.ClosedPR.parse(payload.pull_request!.title)]
             case "PullRequestReviewEvent" where payload.action == "created" && payload.review!.state == "approved":
-                return try GithubIntegration.ApprovedPR.parse(payload.pull_request!.title)
+                return try [GithubIntegration.ApprovedPR.parse(payload.pull_request!.title)]
             case "PullRequestReviewEvent" where payload.action == "created" && payload.review!.state == "commented":
-                return try GithubIntegration.DiscussedPR.parse(payload.pull_request!.title)
+                return try [GithubIntegration.DiscussedPR.parse(payload.pull_request!.title)]
             case "PullRequestReviewEvent" where payload.action == "created" && payload.review!.state == "changes_requested":
-                return try GithubIntegration.RejectedPR.parse(payload.pull_request!.title)
+                return try [GithubIntegration.RejectedPR.parse(payload.pull_request!.title)]
             case "PushEvent":
-                return try GithubIntegration.PushedCommit.parse(payload.commits!.last!.message)
-                // TODO: toEventData() throws -> [EventData]
+                return try payload.commits!.map { try GithubIntegration.PushedCommit.parse($0.message) }
             default:
-                return nil
+                return [nil]
             }
         }
 
-        func toID() -> String {
+        func toID() -> [String] {
             switch type {
             case "PullRequestEvent":
-                return "GitHub(\(payload.action!.capitalized)\(type)#\(payload.pull_request!.id)@\(toDate().toDay()))"
+                return ["GitHub(\(payload.action!.capitalized)\(type)#\(payload.pull_request!.id)@\(toDate().toDay()))"]
             case "PullRequestReviewEvent":
                 let state = payload.review!.state.split(separator: "_").map { $0.capitalized }.joined(separator: "")
-                return "GitHub(\(state)\(type)#\(payload.pull_request!.id)@\(toDate().toDay()))"
+                return ["GitHub(\(state)\(type)#\(payload.pull_request!.id)@\(toDate().toDay()))"]
+            case "PushEvent":
+                return payload.commits!.map { "GitHub(PushEvent#\($0.sha)" }
             default:
-                return "GitHub(\(id))"
+                return ["GitHub(\(id))"]
             }
         }
         
