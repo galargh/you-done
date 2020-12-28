@@ -12,7 +12,7 @@ struct IntegrationListView: View {
     @EnvironmentObject var integrationStore: IntegrationStore
 
     var body: some View {
-        ScrollView(showsIndicators: false) {
+        ScrollView {
             ForEach(Integration.State.allCases, id: \.rawValue) { state in
                 let integrationList = integrationStore.all(forState: state)
                 if !integrationList.isEmpty {

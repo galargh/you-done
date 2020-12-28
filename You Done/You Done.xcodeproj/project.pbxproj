@@ -11,6 +11,7 @@
 		68C37464258AA76500F5C5E0 /* EventConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C37463258AA76500F5C5E0 /* EventConfigurationView.swift */; };
 		68C3746C2591163A00F5C5E0 /* AlertSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C3746B2591163A00F5C5E0 /* AlertSheet.swift */; };
 		68C3748325926AAA00F5C5E0 /* ColourPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C3748225926AAA00F5C5E0 /* ColourPickerView.swift */; };
+		68C37487259A27B900F5C5E0 /* Integration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC746257F944C00709835 /* Integration.swift */; };
 		68CBC6DB257E943C00709835 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DA257E943C00709835 /* AppDelegate.swift */; };
 		68CBC6DD257E943C00709835 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DC257E943C00709835 /* ContentView.swift */; };
 		68CBC6E0257E943C00709835 /* You_Done.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 68CBC6DE257E943C00709835 /* You_Done.xcdatamodeld */; };
@@ -396,6 +397,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68C37487259A27B900F5C5E0 /* Integration.swift in Sources */,
 				68CBC6FF257E943F00709835 /* You_DoneUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -17,6 +17,10 @@ extension Date {
         return dateFormatter.date(from: dayString)!
     }
     
+    func nextDay() -> Date {
+        Calendar.current.date(byAdding: .day, value: +1, to: toDay())!.toDay()
+    }
+    
     static let today = Date().toDay()
     static let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!.toDay()
 }

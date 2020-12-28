@@ -171,10 +171,14 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
 
 }
 
-struct EventData {
+struct EventData: Hashable {
     var id: String
     var text: String
     var date: Date
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
 class GithubIntegration: Integration {
@@ -237,7 +241,7 @@ class GithubIntegration: Integration {
         return events(date: date).map { eventList in
             return try eventList.map { event in
                 return try EventData(id: event.toID(), text: event.toString()!, date: event.toDate())
-            }
+            }.unique()
         }
     }
     
@@ -282,6 +286,7 @@ class GithubIntegration: Integration {
                 return try GithubIntegration.RejectedPR.parse(payload.pull_request!.title)
             case "PushEvent":
                 return try GithubIntegration.PushedCommit.parse(payload.commits!.last!.message)
+                // TODO: toEventData() throws -> [EventData]
             default:
                 return nil
             }
@@ -290,14 +295,12 @@ class GithubIntegration: Integration {
         func toID() -> String {
             switch type {
             case "PullRequestEvent":
-                return "\(payload.action!.capitalized)\(type)(\(payload.pull_request!.id)"
+                return "GitHub(\(payload.action!.capitalized)\(type)#\(payload.pull_request!.id)@\(toDate().toDay()))"
             case "PullRequestReviewEvent":
                 let state = payload.review!.state.split(separator: "_").map { $0.capitalized }.joined(separator: "")
-                return "\(state)\(type)(\(payload.pull_request!.id)"
-            case "PushEvent":
-                return "\(type)(\(id))"
+                return "GitHub(\(state)\(type)#\(payload.pull_request!.id)@\(toDate().toDay()))"
             default:
-                return id
+                return "GitHub(\(id))"
             }
         }
         
@@ -386,7 +389,7 @@ class GoogleCalendarIntegration: Integration {
                         "singleEvents": "true",
                         "orderBy": "startTime",
                         "timeMin": ISO8601DateFormatter().string(from: date.toDay()),
-                        "timeMax": ISO8601DateFormatter().string(from: date)
+                        "timeMax": ISO8601DateFormatter().string(from: date.nextDay())
                     ]
                 ).map { response -> Events in
                     let data = try response.responseData()
@@ -395,6 +398,7 @@ class GoogleCalendarIntegration: Integration {
                 }
             }.flatten().map { $0.map { $0.items } }.map { $0.reduce([], +) }
         }.map { eventList in
+            print(eventList)
             return try eventList.filter { event in
                 try event.toString(email: self.email!) != nil
             }
@@ -406,7 +410,7 @@ class GoogleCalendarIntegration: Integration {
             return try eventList.map { event in
                 let text = try event.toString(email: self.email!)!
                 return EventData(id: event.toID(), text: text, date: event.toDate())
-            }
+            }.unique()
         }
     }
     
@@ -441,7 +445,7 @@ class GoogleCalendarIntegration: Integration {
         }
         
         func toID() -> String {
-            return id
+            return "Google Calendar(\(id))"
         }
     }
     
