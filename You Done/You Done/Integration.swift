@@ -171,13 +171,22 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
 
 }
 
-struct EventData: Hashable {
+struct EventData: Hashable, Equatable {
+    let id = UUID()
     var label: String?
     var text: String
     var date: Date
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(label)
+        if label != nil {
+            hasher.combine(label)
+        } else {
+            hasher.combine(id)
+        }
+    }
+    
+    static func == (lhs: EventData, rhs: EventData) -> Bool {
+        return lhs.label != nil && rhs.label != nil && lhs.label == rhs.label
     }
 }
 
