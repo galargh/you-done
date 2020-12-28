@@ -96,7 +96,7 @@ struct StatusView: View {
                             .aspectRatio(contentMode: .fit)
                             .shadow(radius: Constants.BigShadowRadius)
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding)
+                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(self.taskStore.taskList.count(binned: true) == 0)
                     Button(action: {
                         loadTaskList()
                     }) {
@@ -120,7 +120,7 @@ struct StatusView: View {
             }
             if (self.taskStore.taskList.count(binned: false) == 0 && !showBin) {
                 Button(action: {
-                    self.taskStore.taskList.append(contentsOf: [EventData(id: UUID().description, text: "New task", date: taskStore.date)], in: managedObjectContext)
+                    self.taskStore.taskList.append(contentsOf: [EventData(text: "New task", date: taskStore.date)], in: managedObjectContext)
                 }) {
                     Image("Unicorn").resizable().aspectRatio(contentMode: .fit).shadow(radius: Constants.BigShadowRadius)
                 }.buttonStyle(PlainButtonStyle())
@@ -134,7 +134,7 @@ struct StatusView: View {
                             HStack {
                                 Spacer()
                                 Button(action: {
-                                    self.taskStore.taskList.append(contentsOf: [EventData(id: UUID().description, text: "New task", date: taskStore.date)], in: managedObjectContext)
+                                    self.taskStore.taskList.append(contentsOf: [EventData(text: "New task", date: taskStore.date)], in: managedObjectContext)
                                 }) {
                                     Image("Add Colour")
                                         .resizable()

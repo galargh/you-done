@@ -172,12 +172,12 @@ class Integration: OAuth2DataLoader, ObservableObject, Identifiable {
 }
 
 struct EventData: Hashable {
-    var id: String
+    var label: String?
     var text: String
     var date: Date
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(label)
     }
 }
 
@@ -272,9 +272,9 @@ class GithubIntegration: Integration {
         
         func toEventDataList() throws -> [EventData] {
             let date = toDate()
-            return try zip(toString(), toID()).compactMap { textOpt, id -> EventData? in
+            return try zip(toString(), toLabel()).compactMap { textOpt, label -> EventData? in
                 if let text = textOpt {
-                    return EventData(id: id, text: text, date: date)
+                    return EventData(label: label, text: text, date: date)
                 } else {
                     return nil
                 }
@@ -300,7 +300,7 @@ class GithubIntegration: Integration {
             }
         }
 
-        func toID() -> [String] {
+        func toLabel() -> [String] {
             switch type {
             case "PullRequestEvent":
                 return ["GitHub(\(payload.action!.capitalized)\(type)#\(payload.pull_request!.id)@\(toDate().toDay()))"]
@@ -419,7 +419,7 @@ class GoogleCalendarIntegration: Integration {
         return events(date: date).map { eventList in
             return try eventList.map { event in
                 let text = try event.toString(email: self.email!)!
-                return EventData(id: event.toID(), text: text, date: event.toDate())
+                return EventData(label: event.toLabel(), text: text, date: event.toDate())
             }.unique()
         }
     }
@@ -454,7 +454,7 @@ class GoogleCalendarIntegration: Integration {
             return ISO8601DateFormatter().date(from: start.date ?? start.dateTime!)!
         }
         
-        func toID() -> String {
+        func toLabel() -> String {
             return "Google Calendar(\(id))"
         }
     }

@@ -79,10 +79,11 @@ class TaskList: ObservableObject, Equatable {
     func append(contentsOf list: [EventData], in context: NSManagedObjectContext) {
         DispatchQueue.main.async {
             let taskList = list.filter { event in
-                return !self.items.contains { item in item.id == event.id }
+                return event.label == nil || !self.items.contains { item in item.label == event.label }
             }.map { event -> Task in
                 let task = Task(context: context)
-                task.id = event.id
+                task.id = UUID()
+                task.label = event.label
                 task.text = event.text
                 task.date = event.date
                 task.day = event.date.toDay()
@@ -91,6 +92,23 @@ class TaskList: ObservableObject, Equatable {
             self.items.append(contentsOf: taskList)
         }
     }
+    
+    func remove(contentsOf list: [Task], in context: NSManagedObjectContext) {
+        DispatchQueue.main.async {
+            list.forEach { task in
+                context.delete(task)
+            }
+            let idList = list.map { $0.id }
+            self.items = self.items.filter { item in
+                !idList.contains(item.id)
+            }
+        }
+    }
+    
+    func removeAll(in context: NSManagedObjectContext) {
+        remove(contentsOf: self.items, in: context)
+    }
+
     
     func reset() {
         DispatchQueue.main.async {
