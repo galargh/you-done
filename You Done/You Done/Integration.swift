@@ -408,7 +408,6 @@ class GoogleCalendarIntegration: Integration {
                 }
             }.flatten().map { $0.map { $0.items } }.map { $0.reduce([], +) }
         }.map { eventList in
-            print(eventList)
             return try eventList.filter { event in
                 try event.toString(email: self.email!) != nil
             }
