@@ -7,11 +7,19 @@
 
 import Foundation
 
-extension Date {
-    func toDay() -> Date {
+
+extension DateFormatter {
+    static func day() -> DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = TimeZone.current
         dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }
+}
+
+extension Date {
+    func toDay() -> Date {
+        let dateFormatter = DateFormatter.day()
         let dayString = dateFormatter.string(from: self)
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         return dateFormatter.date(from: dayString)!

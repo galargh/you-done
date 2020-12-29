@@ -417,8 +417,9 @@ class GoogleCalendarIntegration: Integration {
                 }
             }.flatten().map { $0.map { $0.items } }.map { $0.reduce([], +) }
         }.map { eventList in
+            let day = date.toDay()
             return try eventList.filter { event in
-                try event.toString(email: self.email!) != nil
+                try event.toString(email: self.email!) != nil && event.toDate().toDay() == day
             }
         }
     }
@@ -459,7 +460,11 @@ class GoogleCalendarIntegration: Integration {
         }
         
         func toDate() -> Date {
-            return ISO8601DateFormatter().date(from: start.date ?? start.dateTime!)!
+            if let date = start.date {
+                return DateFormatter.day().date(from: date)!
+            } else {
+                return ISO8601DateFormatter().date(from: start.dateTime!)!
+            }
         }
         
         func toLabel() -> String {
