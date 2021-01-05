@@ -19,6 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var taskStore: TaskStore!
     var colourScheme: ColourScheme!
     var alertContext: AlertContext!
+    var today: Date!
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -26,10 +27,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Add `@Environment(\.managedObjectContext)` in the views that will need the context.
         let contentView = ContentView().environment(\.managedObjectContext, persistentContainer.viewContext)
 
-        integrationStore = IntegrationStore()
-        taskStore = TaskStore(context: persistentContainer.viewContext)
-        colourScheme = ColourScheme()
         alertContext = AlertContext()
+        integrationStore = IntegrationStore()
+        today = Date.today()
+        taskStore = TaskStore(context: persistentContainer.viewContext,
+                              alertContext: alertContext,
+                              integrationStore: integrationStore,
+                              date: today)
+        colourScheme = ColourScheme()
         
         // Create the popover and set the content view.
         popover = NSPopover()
@@ -82,6 +87,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 localEventMonitor.stop()
                 do { try persistentContainer.viewContext.save() } catch { print("Failed to save context \(error)") }
             } else {
+                if (self.today == Date.today()) {
+                    if (self.taskStore.date == self.today) {
+                        self.today = Date.today()
+                        self.taskStore.setDate(self.today)
+                    } else {
+                        self.today = Date.today()
+                        self.taskStore.pull()
+                    }
+                }
                 popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
                 popover.contentViewController?.view.window?.becomeKey()
                 globalEventMonitor.start()

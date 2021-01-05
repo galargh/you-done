@@ -29,6 +29,11 @@ extension Date {
         Calendar.current.date(byAdding: .day, value: +1, to: toDay())!.toDay()
     }
     
-    static let today = Date().toDay()
-    static let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!.toDay()
+    static func today() -> Date {
+        Date().toDay()
+        
+    }
+    static func yesterday() -> Date {
+        Calendar.current.date(byAdding: .day, value: -1, to: today())!.toDay()
+    }
 }

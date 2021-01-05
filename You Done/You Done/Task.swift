@@ -21,13 +21,32 @@ extension Dictionary {
 
 class TaskStore: ObservableObject {
     private var taskListByDate: [Date:TaskList] = [:]
-    @Published var date: Date
-    @Published var taskList: TaskList
+    @Published var date: Date = Date.today()
+    @Published var taskList: TaskList = TaskList()
+    @Published var isPulling = false
+
     
     private var context: NSManagedObjectContext
+    private var alertContext: AlertContext
+    private var integrationStore: IntegrationStore
     private var taskListObserver: AnyCancellable? = nil
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        return formatter
+    }
     
-    private static func fetchTasks(context: NSManagedObjectContext, date: Date = Date()) -> [Task] {
+    func getDateString() -> String {
+        if (date == Date.today()) {
+            return "Today"
+        } else if (date == Date.yesterday()) {
+            return "Yesterday"
+        } else {
+            return dateFormatter.string(from: date)
+        }
+    }
+    
+    private func fetchTasks(date: Date = Date()) -> [Task] {
         let request: NSFetchRequest<Task> = Task.fetchRequest()
         request.predicate = NSPredicate(format: "day == %@", date.toDay() as CVarArg)
         request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
@@ -48,21 +67,38 @@ class TaskStore: ObservableObject {
         return taskController.fetchedObjects ?? []
     }
     
-    init(context: NSManagedObjectContext, date: Date = Date()) {
+    init(context: NSManagedObjectContext, alertContext: AlertContext, integrationStore: IntegrationStore, date: Date = Date()) {
         self.context = context
-        self.date = date.toDay()
-        self.taskList = taskListByDate.getOrSet(date.toDay(),
-                                                defaultValue: { TaskList(items: TaskStore.fetchTasks(context: context, date: date)) }
-        )
-        self.taskListObserver = taskList.objectWillChange.sink(receiveValue: { _ in self.objectWillChange.send() })
+        self.alertContext = alertContext
+        self.integrationStore = integrationStore
+        setDate(date)
     }
     
     func setDate(_ date: Date) {
         self.date = date.toDay()
-        self.taskList = taskListByDate.getOrSet(date.toDay(),
-                                                defaultValue: { TaskList(items: TaskStore.fetchTasks(context: context, date: date)) }
-        )
+        self.taskList = taskListByDate.getOrSet(date.toDay(), defaultValue: { TaskList(items: fetchTasks(date: date)) })
         self.taskListObserver = taskList.objectWillChange.sink(receiveValue: { _ in self.objectWillChange.send() })
+        self.pull()
+    }
+    
+    func pull(_ force: Bool = false) {
+        if (force || UserDefaults.standard.bool(forKey: "Active Pull")) {
+            let deadline = DispatchTime.now() + 1
+            var errorList: [Error] = []
+            isPulling = true
+            integrationStore.all(forState: .installed).map { $0.pull(date: date) }.subscribe(onNext: { pulledEventList in
+                self.taskList.append(contentsOf: pulledEventList, in: self.context)
+            }, onError: { error in
+                errorList.append(error)
+            }, onFinal: {
+                DispatchQueue.main.asyncAfter(deadline: deadline) {
+                    self.isPulling = false
+                }
+                if (!errorList.isEmpty) {
+                    self.alertContext.message = errorList.map { $0.localizedDescription }.joined(separator: "\n")
+                }
+            })
+        }
     }
 }
 

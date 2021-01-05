@@ -9,58 +9,12 @@ import SwiftUI
 
 struct StatusView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @EnvironmentObject var integrationStore: IntegrationStore
     @EnvironmentObject var taskStore: TaskStore
     
     @Binding var showBin: Bool
-
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        return formatter
-    }
     
-    @State private var dateString = "Today"
     @State private var showDatePicker = false
-    
-
-    private func setDate(_ date: Date) {
-        self.taskStore.setDate(date)
-        self.showDatePicker = false
-        refreshDateString()
-        loadTaskList()
-    }
-    
-    private func refreshDateString() {
-        if (self.taskStore.date == Date.today) {
-            self.dateString = "Today"
-        } else if (self.taskStore.date == Date.yesterday) {
-            self.dateString = "Yesterday"
-        } else {
-            self.dateString = dateFormatter.string(from: self.taskStore.date)
-        }
-    }
-    
-    @EnvironmentObject var alertContext: AlertContext
-    @State private var isPulling = false
-    private func loadTaskList() {
-        let deadline = DispatchTime.now() + 1
-        var errorList: [Error] = []
-        isPulling = true
-        integrationStore.all(forState: .installed).map { $0.pull(date: taskStore.date) }.subscribe(onNext: { pulledEventList in
-            taskStore.taskList.append(contentsOf: pulledEventList, in: managedObjectContext)
-        }, onError: { error in
-            errorList.append(error)
-        }, onFinal: {
-            DispatchQueue.main.asyncAfter(deadline: deadline) {
-                isPulling = false
-            }
-            if (!errorList.isEmpty) {
-                self.alertContext.message = errorList.map { $0.localizedDescription }.joined(separator: "\n")
-            }
-        })
-    }
-    
+        
     private var foreverAnimation: Animation {
         Animation.linear(duration: 4.0)
             .repeatForever(autoreverses: false)
@@ -70,7 +24,7 @@ struct StatusView: View {
         VStack {
             if (!showBin) {
                 HStack {
-                    Text(dateString)
+                    Text(taskStore.getDateString())
                         .bold()
                         .font(.system(size: 24.0))
                         .shadow(radius: Constants.BigShadowRadius)
@@ -83,7 +37,7 @@ struct StatusView: View {
                         ) {
                             DatePicker("?", selection: Binding(
                                 get: { return self.taskStore.date },
-                                set: { setDate($0) }
+                                set: { date in self.taskStore.setDate(date); self.showDatePicker = false }
                             ), in: ...Date(), displayedComponents: .date).datePickerStyle(GraphicalDatePickerStyle())
                                 .labelsHidden()
                         }
@@ -98,16 +52,16 @@ struct StatusView: View {
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(self.taskStore.taskList.count(binned: true) == 0)
                     Button(action: {
-                        loadTaskList()
+                        taskStore.pull(true)
                     }) {
-                        Image(isPulling ? "Sync" : "Sync Colour")
+                        Image(taskStore.isPulling ? "Sync" : "Sync Colour")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .shadow(radius: Constants.BigShadowRadius)
-                            .rotationEffect(Angle(degrees: isPulling ? 360 : 0.0))
-                            .animation(isPulling ? foreverAnimation : .default)
+                            .rotationEffect(Angle(degrees: taskStore.isPulling ? 360 : 0.0))
+                            .animation(taskStore.isPulling ? foreverAnimation : .default)
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
-                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(isPulling)
+                    }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(taskStore.isPulling)
                 }
             } else {
                 HStack {
@@ -154,7 +108,7 @@ struct StatusView: View {
                     Button(action: {
                         let pasteBoard = NSPasteboard.general
                         pasteBoard.clearContents()
-                        pasteBoard.writeObjects([self.taskStore.taskList.toString(title: dateString) as NSString])
+                        pasteBoard.writeObjects([self.taskStore.taskList.toString(title: self.taskStore.getDateString()) as NSString])
                     }) {
                         Image(self.taskStore.taskList.isEmpty ? "File" : "File Colour")
                             .resizable()
@@ -170,11 +124,6 @@ struct StatusView: View {
                             .frame(width: Constants.BigButtonWidth, height: Constants.BigButtonHeight)
                     }.buttonStyle(PlainButtonStyle()).padding(.leading, Constants.BigButtonLeadingPadding).disabled(true)
                 }
-            }
-        }.onAppear {
-            refreshDateString()
-            if (UserDefaults.standard.bool(forKey: "Active Pull")) {
-                loadTaskList()
             }
         }
     }
