@@ -87,7 +87,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 localEventMonitor.stop()
                 do { try persistentContainer.viewContext.save() } catch { print("Failed to save context \(error)") }
             } else {
-                if (self.today == Date.today()) {
+                if (self.today != Date.today()) {
                     if (self.taskStore.date == self.today) {
                         self.today = Date.today()
                         self.taskStore.setDate(self.today)
