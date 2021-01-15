@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+  height: 100%;
+  font-family: sans-serif;
+  background-color: #b1b6e1;
+  margin: 0;
+}
+h1, p {
+  margin: 0;
+}
+h1, .vote {
+  font-size: 32px;
+  font-weight: bold;
+}
+header {
+  background-color: #a1e8c3;
+  padding: 20px;
+  color: #3c122c;
+  text-align: center;
+}
+a {
+  color: #3c122c;
+}
+container {
+  padding: 10px;
+  text-align: center;
+  font-size: 24px;
+  color: white;
+}
+container p {
+  padding: 10px;
+}
+.center {
+  max-width: 800px;
+  margin: auto;
+}
