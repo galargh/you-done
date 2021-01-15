@@ -93,6 +93,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         self.taskStore.setDate(self.today)
                     } else {
                         self.today = Date.today()
+                        self.taskStore.objectWillChange.send()
                         self.taskStore.pull()
                     }
                 }
